@@ -1,0 +1,26 @@
+################################################################################
+##                             Network interface                              ##
+################################################################################
+server:
+  # Endpoint of Stoa
+  stoa_endpoint:  http://localhost:3836
+
+  # Endpoint of Agora
+  agora_endpoint: http://localhost:2826
+
+################################################################################
+##                               Logging options                              ##
+################################################################################
+logging:
+  # The name of the folder where the logs are stored.
+  folder: logs/
+  # Values: error, warn, info, http, verbose, debug, silly
+  level: http
+  # Default to false
+  console: true
+
+process:
+  enable: true
+  only_genesis: false
+  delay: 5000
+  key_count: 500
