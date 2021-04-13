@@ -31,23 +31,77 @@ export class Distributor {
                     logger.error(e);
                     return reject(e);
                 }
-                if (utxos.length === 0)
+                if (utxos.length < 1)
                     return resolve([]);
 
-                let count = utxos.length;
+                let count = utxos.length-1;
                 let tx_out_count = Math.ceil(key_count / count);
 
                 for (let idx = 0; idx < count; idx++)
                 {
                     let sum: sdk.JSBI = utxos[idx].amount;
                     let amount = sdk.JSBI.divide(sum, sdk.JSBI.BigInt(tx_out_count));
+                    let remain = sdk.JSBI.subtract(sum, sdk.JSBI.multiply(amount, sdk.JSBI.BigInt(tx_out_count)));
+
                     let builder = new sdk.TxBuilder(WK.GenesisKey);
                     builder.addInput(utxos[idx].utxo, utxos[idx].amount);
                     for (let key_idx = 0; key_idx < tx_out_count; key_idx++) {
-                        builder.addOutput(WK.keys((idx * tx_out_count) + key_idx).address, amount);
+                        if (key_idx < tx_out_count - 1)
+                            builder.addOutput(WK.keys((idx * tx_out_count) + key_idx).address, amount);
+                        else
+                            builder.addOutput(WK.keys((idx * tx_out_count) + key_idx).address, sdk.JSBI.add(amount, remain));
                     }
                     let tx = builder.sign(sdk.TxType.Payment);
                     res.push(tx);
+                }
+
+                {
+                    let validators = [
+                        WK.NODE2().address,
+                        WK.NODE3().address,
+                        WK.NODE4().address,
+                        WK.NODE5().address,
+                        WK.NODE6().address,
+                        WK.NODE7().address,
+                        WK.NODE2().address,
+                        WK.NODE3().address,
+                        WK.NODE4().address,
+                        WK.NODE5().address,
+                        WK.NODE6().address,
+                        WK.NODE7().address,
+                        WK.NODE2().address,
+                        WK.NODE3().address,
+                        WK.NODE4().address,
+                        WK.NODE5().address,
+                        WK.NODE6().address,
+                        WK.NODE7().address,
+                        WK.NODE2().address,
+                        WK.NODE3().address,
+                        WK.NODE4().address,
+                        WK.NODE5().address,
+                        WK.NODE6().address,
+                        WK.NODE7().address,
+                        WK.NODE2().address,
+                        WK.NODE3().address,
+                        WK.NODE4().address,
+                        WK.NODE5().address,
+                        WK.NODE6().address,
+                        WK.NODE7().address
+                    ];
+                    let idx = utxos.length-1;
+                    let sum: sdk.JSBI = utxos[idx].amount;
+                    let amount = sdk.JSBI.divide(sum, sdk.JSBI.BigInt(validators.length));
+                    let remain = sdk.JSBI.subtract(sum, sdk.JSBI.multiply(amount, sdk.JSBI.BigInt(validators.length)));
+                    let builder = new sdk.TxBuilder(WK.GenesisKey);
+                    builder.addInput(utxos[idx].utxo, utxos[idx].amount);
+                    for (let key_idx = 0; key_idx < validators.length; key_idx++) {
+                        if (key_idx < validators.length - 1)
+                            builder.addOutput(validators[key_idx], amount);
+                        else
+                            builder.addOutput(validators[key_idx], sdk.JSBI.add(amount, remain));
+                    }
+                    let tx = builder.sign(sdk.TxType.Payment);
+                    res.unshift(tx);
                 }
 
                 return resolve(res);
@@ -95,7 +149,7 @@ export class Distributor {
                             catch (e) {
                                 logger.error(e);
                             }
-                            await wait(this.config.process.delay);
+                            await wait(1000);
                         }
                     }
                     return resolve({

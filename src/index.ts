@@ -6,6 +6,8 @@ import * as routes from "./routes";
 import { logger, Logger } from './modules/common/Logger';
 import { Config } from './modules/common/Config';
 
+import bodyParser from 'body-parser';
+
 // Create with the arguments and read from file
 let config = Config.createWithArgument();
 
@@ -39,6 +41,10 @@ dotenv.config();
 const port = process.env.SERVER_PORT || 3000;
 const app = express();
 
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }))
+// parse application/json
+app.use(bodyParser.json())
 app.use(express.json());
 
 app.set("views", path.join(__dirname, "views"));

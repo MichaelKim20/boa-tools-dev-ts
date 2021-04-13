@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <%- include('partials/html_head') %>
+</head>
+<body>
+<div data-role="page">
+  <%- include('partials/header') %>
+  <div data-role="content" class="jqm-content" style="text-align:center;">
+    <div data-demo-html="true">
+      <ul data-role="listview">
+        <li>Result : <%= result.status %></li>
+        <% if (result.status) { %>
+          <li>Transaction Hash : <%= result.data %></li>
+        <% } %>
+        <% if (!result.status) { %>
+          <li>Error : <%= result.error %></li>
+        <% } %>
+      </ul>
+    </div>
+    <p></p>
+    <a href="/PG2000" data-ajax="false" class="ui-btn ui-btn-b">Back</a>
+  </div>
+  <%- include('partials/footer') %>
+</div>
+</body>
+</html>

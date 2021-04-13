@@ -1,3 +1,3 @@
 #!/bin/sh
 
-exec npm start --prefix /dev/bin/ -- $@
+exec npm start --prefix /toolsdev/bin/ -- $@

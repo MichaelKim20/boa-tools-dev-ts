@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <%- include('partials/html_head') %>
+</head>
+<body>
+<div data-role="page">
+  <%- include('partials/header') %>
+  <div data-role="content" class="jqm-content" style="text-align:center;">
+    <div data-demo-html="true">
+      <ul data-role="listview">
+        <li>Height : <%= result.height %></li>
+        <li>Validators : </li>
+        <% for (var idx = 0; idx < result.validators.length; idx++) { %>
+          <li><%= ">> " + result.validators[idx] %></li>
+        <% } %>
+      </ul>
+    </div>
+    <p></p>
+    <a href="/PF3000" data-ajax="false" class="ui-btn ui-btn-b">Refresh</a>
+  </div>
+  <%- include('partials/footer') %>
+</div>
+</body>
+</html>

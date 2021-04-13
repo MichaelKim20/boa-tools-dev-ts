@@ -9,15 +9,14 @@ docs/
 # Dependency build files, It is installed when creating a docker image.
 node_modules/
 
-# Database files
-stoa/data/
-
 # Logging files
-stoa/logs/
-
+logs/
 
 # Visual Studio Code
 .vscode/
 
 # WebStorm
 .idea/
+
+dist/
+

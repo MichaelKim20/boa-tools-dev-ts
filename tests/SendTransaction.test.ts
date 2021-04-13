@@ -44,4 +44,14 @@ describe ('Test2', () =>
             console.log(key.address.toString());
     });
 
+    it ('Test 3', () =>
+    {
+        console.log(WK.NODE2().address.toString());
+        console.log(WK.NODE3().address.toString());
+        console.log(WK.NODE4().address.toString());
+        console.log(WK.NODE5().address.toString());
+        console.log(WK.NODE6().address.toString());
+        console.log(WK.NODE7().address.toString());
+        console.log(WK.CommonsBudget().address.toString());
+    });
 });

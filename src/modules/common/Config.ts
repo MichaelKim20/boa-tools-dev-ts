@@ -88,7 +88,7 @@ export class Config implements IConfig
         // Parse the arguments
         const parser = new ArgumentParser();
         parser.add_argument('-c', '--config', {
-            default: "./docs/config.yaml",
+            default: "config.yaml",
             help: "Path to the config file to use",
         });
         let args = parser.parse_args();

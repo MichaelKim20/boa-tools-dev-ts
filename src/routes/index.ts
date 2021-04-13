@@ -1,5 +1,10 @@
 import * as express from "express";
-import {Page, Distributor} from "../modules";
+import {
+    Page, Distributor, RandomTxSender, InfoProvider,
+    ProposalFeeSender, IProposalFeeLinkData,
+    VotingFeeSender, IVotingFeeLinkData,
+    VoteSender, IVoteLinkData
+} from "../modules";
 
 export const register = (app: express.Application) => {
     // home page
@@ -12,12 +17,22 @@ export const register = (app: express.Application) => {
             });
     });
 
-    app.get("/distribute", (req: any, res) => {
+    app.get("/PF1000", (req: any, res) => {
+        const page = new Page(1, "Distribute Genesis Coins");
+        res.render('pf1000',
+            {
+                title: page.getTitle(),
+                menu: page.getMenu()
+            });
+    });
+
+
+    app.get("/PF1200", (req: any, res) => {
         const distributor = new Distributor();
         distributor.send()
             .then((result) => {
                 const page = new Page(1, "Result of distribution");
-                res.render('distribute',
+                res.render('pf1200',
                     {
                         title: page.getTitle(),
                         menu: page.getMenu(),
@@ -26,12 +41,41 @@ export const register = (app: express.Application) => {
             });
     });
 
-    app.get("/PF1000", (req: any, res) => {
-        const page = new Page(1, "Distribute Genesis Coins");
-        res.render('pf1000',
+    app.get("/PF2000", (req: any, res) => {
+        const page = new Page(1, "Send Random Transaction");
+        res.render('pf2000',
             {
                 title: page.getTitle(),
                 menu: page.getMenu()
+            });
+    });
+
+
+    app.get("/PF2200", (req: any, res) => {
+        const sender = new RandomTxSender();
+        sender.send()
+            .then((result) => {
+                const page = new Page(1, "Result of send transaction");
+                res.render('pf2200',
+                    {
+                        title: page.getTitle(),
+                        menu: page.getMenu(),
+                        result: result
+                    });
+            });
+    });
+
+    app.get("/PF3000", (req: any, res) => {
+        const provider = new InfoProvider();
+        provider.getInformation()
+            .then((result) => {
+                const page = new Page(1, "Information");
+                res.render('pf3000',
+                    {
+                        title: page.getTitle(),
+                        menu: page.getMenu(),
+                        result: result
+                    });
             });
     });
 
@@ -44,12 +88,42 @@ export const register = (app: express.Application) => {
             });
     });
 
+    app.post("/PG1200", (req: any, res) => {
+        let data:IProposalFeeLinkData = JSON.parse(req.body.link_data);
+        let sender = new ProposalFeeSender(data);
+        sender.send()
+            .then((result) => {
+                const page = new Page(2, "Result of proposal fee transfer");
+                res.render('pg1200',
+                    {
+                        title: page.getTitle(),
+                        menu: page.getMenu(),
+                        result: result
+                    });
+            });
+    });
+
     app.get("/PG2000", (req: any, res) => {
-        const page = new Page(2, "Voting Fee Transfer");
+        const page = new Page(2, "Voting Fee & Proposal Data Transfer");
         res.render('pg2000',
             {
                 title: page.getTitle(),
                 menu: page.getMenu()
+            });
+    });
+
+    app.post("/PG2200", (req: any, res) => {
+        let data:IVotingFeeLinkData = JSON.parse(req.body.link_data);
+        let sender = new VotingFeeSender(data);
+        sender.send()
+            .then((result) => {
+                const page = new Page(2, "Result of voting fee transfer");
+                res.render('pg2200',
+                    {
+                        title: page.getTitle(),
+                        menu: page.getMenu(),
+                        result: result
+                    });
             });
     });
 
@@ -59,6 +133,21 @@ export const register = (app: express.Application) => {
             {
                 title: page.getTitle(),
                 menu: page.getMenu()
+            });
+    });
+
+    app.post("/PG3200", (req: any, res) => {
+        let data:IVoteLinkData = JSON.parse(req.body.link_data);
+        let sender = new VoteSender(data);
+        sender.send()
+            .then((result) => {
+                const page = new Page(2, "Result of vote");
+                res.render('pg3200',
+                    {
+                        title: page.getTitle(),
+                        menu: page.getMenu(),
+                        result: result
+                    });
             });
     });
 };
