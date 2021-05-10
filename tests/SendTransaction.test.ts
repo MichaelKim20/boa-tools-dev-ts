@@ -40,17 +40,25 @@ describe ('Test2', () =>
 
     it ('Test 2', () =>
     {
-        for (let key of WK._keys)
+        for (let key of WK._keys) {
+            console.log(key.secret.toString(false));
             console.log(key.address.toString());
+        }
     });
 
     it ('Test 3', () =>
     {
+        console.log(WK.NODE2().secret.toString(false));
         console.log(WK.NODE2().address.toString());
+        console.log(WK.NODE3().secret.toString(false));
         console.log(WK.NODE3().address.toString());
+        console.log(WK.NODE4().secret.toString(false));
         console.log(WK.NODE4().address.toString());
+        console.log(WK.NODE5().secret.toString(false));
         console.log(WK.NODE5().address.toString());
+        console.log(WK.NODE6().secret.toString(false));
         console.log(WK.NODE6().address.toString());
+        console.log(WK.NODE7().secret.toString(false));
         console.log(WK.NODE7().address.toString());
         console.log(WK.CommonsBudget().address.toString());
     });

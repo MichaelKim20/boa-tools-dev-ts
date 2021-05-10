@@ -1,6 +1,6 @@
 import * as express from "express";
 import {
-    Page, Distributor, RandomTxSender, InfoProvider,
+    Page, Distributor, RandomTxSender, LargeTxSender, InfoProvider,
     ProposalFeeSender, IProposalFeeLinkData,
     VotingFeeSender, IVotingFeeLinkData,
     VoteSender, IVoteLinkData
@@ -71,6 +71,30 @@ export const register = (app: express.Application) => {
             .then((result) => {
                 const page = new Page(1, "Information");
                 res.render('pf3000',
+                    {
+                        title: page.getTitle(),
+                        menu: page.getMenu(),
+                        result: result
+                    });
+            });
+    });
+
+    app.get("/PF4000", (req: any, res) => {
+        const page = new Page(1, "Send Large Transaction");
+        res.render('pf4000',
+            {
+                title: page.getTitle(),
+                menu: page.getMenu()
+            });
+    });
+
+
+    app.get("/PF4200", (req: any, res) => {
+        const sender = new LargeTxSender();
+        sender.send()
+            .then((result) => {
+                const page = new Page(1, "Result of send transaction");
+                res.render('pf4200',
                     {
                         title: page.getTitle(),
                         menu: page.getMenu(),
