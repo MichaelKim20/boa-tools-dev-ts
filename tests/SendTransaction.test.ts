@@ -3,11 +3,13 @@ import { Genesis } from '../src/modules/utils/Genesis';
 import { WK } from '../src/modules/utils/WK';
 
 import * as assert from 'assert';
+import {BOASodium} from "boa-sodium-ts";
 
 describe ('Test1', () =>
 {
     before('Wait for the package libsodium to finish loading', () =>
     {
+        sdk.SodiumHelper.assign(new BOASodium());
         return sdk.SodiumHelper.init();
     });
 
@@ -30,6 +32,7 @@ describe ('Test2', () =>
 {
     before('Wait for the package libsodium to finish loading', () =>
     {
+        sdk.SodiumHelper.assign(new BOASodium());
         return sdk.SodiumHelper.init();
     });
 
