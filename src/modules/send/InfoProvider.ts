@@ -21,12 +21,27 @@ export class InfoProvider
     {
         return new Promise<any>(async (resolve) =>
         {
-            let height = await this.boa_client.getBlockHeight();
-            let validators = await this.boa_client.getAllValidators();
-            resolve({
-                height: height.toString(),
-                validators: validators.map(m => m.address.toString())
-            });
+            try {
+                let height = await this.boa_client.getBlockHeight();
+                let validators = await this.boa_client.getAllValidators();
+                resolve({
+                    status: true,
+                    error: "",
+                    data : {
+                        height: height.toString(),
+                        validators: validators.map(m => m.address.toString())
+                    }
+                });
+            } catch (e) {
+                resolve({
+                    status: false,
+                    error: e.message,
+                    data : {
+                        height: "",
+                        validators: ""
+                    }
+                });
+            }
         });
 
     }
