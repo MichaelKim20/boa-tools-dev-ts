@@ -5,7 +5,7 @@ import * as routes from "./routes";
 
 import { logger, Logger } from './modules/common/Logger';
 import { Config } from './modules/common/Config';
-import {Page, RandomTxSender} from "./modules";
+import {Page, RandomTxSender2} from "./modules";
 
 import bodyParser from 'body-parser';
 
@@ -66,7 +66,7 @@ function autoSendRandomTx()
 {
     if (config.process.auto_send)
     {
-        const sender = new RandomTxSender();
+        const sender = new RandomTxSender2();
         sender.send()
             .then((result) =>
             {
