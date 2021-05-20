@@ -24,3 +24,4 @@ process:
   only_genesis: false
   delay: 5000
   key_count: 500
+  auto_send: true

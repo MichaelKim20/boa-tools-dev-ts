@@ -126,15 +126,18 @@ export class ProcessConfig implements IProcessConfig
 
     public key_count: number;
 
-    constructor (enable?: boolean, only_genesis?: boolean, delay?: number, key_count?: number)
+    public auto_send: boolean;
+
+    constructor (enable?: boolean, only_genesis?: boolean, delay?: number, key_count?: number, auto_send?: boolean)
     {
         let conf = extend(true, {}, ProcessConfig.defaultValue());
-        extend(true, conf, {enable: enable, only_genesis: only_genesis, delay : delay, key_count: key_count});
+        extend(true, conf, {enable: enable, only_genesis: only_genesis, delay : delay, key_count: key_count, auto_send: auto_send});
 
         this.enable = conf.enable;
         this.only_genesis = conf.only_genesis;
         this.delay = conf.delay;
         this.key_count = conf.key_count;
+        this.auto_send = conf.auto_send;
     }
 
     /**
@@ -150,6 +153,7 @@ export class ProcessConfig implements IProcessConfig
         this.only_genesis = conf.only_genesis;
         this.delay = conf.delay;
         this.key_count = conf.key_count;
+        this.auto_send = conf.auto_send;
     }
 
     /**
@@ -161,7 +165,8 @@ export class ProcessConfig implements IProcessConfig
             enable: true,
             only_genesis: false,
             delay: 3000,
-            key_count: 1000
+            key_count: 1000,
+            auto_send: true
         }
     }
 }
@@ -183,8 +188,7 @@ export class ServerConfig implements IServerConfig
 
     /**
      * Constructor
-     * @param address The address to which we bind
-     * @param port The port on which we bind
+     * @param stoa_endpoint The endpoint of Stao
      * @param agora_endpoint The endpoint of Agora
      */
     constructor (stoa_endpoint?: string, agora_endpoint?: string)
@@ -288,6 +292,8 @@ export interface IProcessConfig
     delay : number;
 
     key_count: number;
+
+    auto_send: boolean;
 }
 
 /**

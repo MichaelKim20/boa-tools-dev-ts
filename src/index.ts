@@ -5,6 +5,7 @@ import * as routes from "./routes";
 
 import { logger, Logger } from './modules/common/Logger';
 import { Config } from './modules/common/Config';
+import {Page, RandomTxSender} from "./modules";
 
 import bodyParser from 'body-parser';
 
@@ -60,3 +61,27 @@ app.listen(port, () => {
     // tslint:disable-next-line:no-console
     console.log(`server started at http://localhost:${port}`);
 });
+
+function autoSendRandomTx()
+{
+    if (config.process.auto_send)
+    {
+        const sender = new RandomTxSender();
+        sender.send()
+            .then((result) =>
+            {
+                console.log(`${result.status}; ${result.data}`);
+            })
+            .finally(() =>
+            {
+                setTimeout(autoSendRandomTx, 5000);
+            })
+    }
+    else
+        {
+        setTimeout(autoSendRandomTx, 5000);
+    }
+}
+
+setTimeout(autoSendRandomTx, 5000);
+
