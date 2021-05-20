@@ -39,7 +39,7 @@ logger.info(`Agora endpoint: ${config.server.agora_endpoint.toString()}`);
 
 dotenv.config();
 
-const port = process.env.SERVER_PORT || 3000;
+const port = process.env.SERVER_PORT || 5000;
 const app = express();
 
 // parse application/x-www-form-urlencoded
