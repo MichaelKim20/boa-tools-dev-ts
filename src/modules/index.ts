@@ -8,3 +8,4 @@ export {VotingFeeSender, IVotingFeeLinkData} from "./send/VotingFeeSender";
 export {VoteSender, IVoteLinkData} from "./send/VoteSender";
 export {InfoProvider} from "./send/InfoProvider";
 export {LargeTxSender} from "./send/LargeTxSender";
+export {Unfreezing} from "./send/Unfreezing";
