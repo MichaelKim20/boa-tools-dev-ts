@@ -77,11 +77,11 @@ function autoSendRandomTx()
                 setTimeout(autoSendRandomTx, 5000);
             })
     }
-    else
-        {
+    else {
         setTimeout(autoSendRandomTx, 5000);
     }
 }
 
-setTimeout(autoSendRandomTx, 5000);
-
+if (config.process.auto_send) {
+    setTimeout(autoSendRandomTx, 5000);
+}

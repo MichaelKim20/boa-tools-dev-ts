@@ -24,7 +24,7 @@ export class Unfreezing {
             try
             {
                 let utxos: Array<sdk.UnspentTxOutput>;
-                let sender = sdk.KeyPair.fromSeed(new sdk.SecretKey("SB3GZ445DHGSA7BS4ZVFGEOOKS7JDTJZE5ZDCNKSJ3ZMVMTT4U7QR6W6"));
+                let sender = sdk.KeyPair.fromSeed(new sdk.SecretKey("SAWI3JZWDDSQR6AX4DRG2OMS26Y6XY4X2WA3FK6D5UW4WTU74GUQXRZP"));
                 utxos = await this.boa_client.getUTXOs(sender.address);
                 let frozen: Array<sdk.UnspentTxOutput> = [];
                 utxos.forEach((m) => {
@@ -41,7 +41,7 @@ export class Unfreezing {
                     let builder = new sdk.TxBuilder(sender);
                     builder.addInput(frozen[0].utxo, frozen[0].amount);
                     builder.addOutput(sender.address, amount);
-                    let tx = builder.sign(sdk.TxType.Payment);
+                    let tx = builder.sign(sdk.TxType.Payment, tx_fee);
                     console.log(JSON.stringify(tx));
                     return resolve(tx);
                 } else {
