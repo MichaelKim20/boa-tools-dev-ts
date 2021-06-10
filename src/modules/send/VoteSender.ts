@@ -43,25 +43,25 @@ export class VoteSender
                 let utxo_manager = new sdk.UTXOManager(utxos);
 
                 let send_amount = sdk.JSBI.BigInt(1);
-                let payload = new sdk.DataPayload(Buffer.from(this.link_data.payload, "base64"));
-                let payload_fee = sdk.TxPayloadFee.getFee(payload.data.length);
+                let payload = Buffer.from(this.link_data.payload, "base64");
+                let payload_fee = sdk.TxPayloadFee.getFee(payload.length);
 
                 let output_count = 2;
                 let estimated_tx_fee = sdk.JSBI.BigInt(sdk.Utils.FEE_FACTOR *
-                    sdk.Transaction.getEstimatedNumberOfBytes(0, output_count, payload.data.length));
+                    sdk.Transaction.getEstimatedNumberOfBytes(0, output_count, payload.length));
                 let total_fee = sdk.JSBI.add(payload_fee, estimated_tx_fee);
 
                 let in_utxos = utxo_manager.getUTXO(sdk.JSBI.add(send_amount, total_fee), height,
                     sdk.JSBI.BigInt(sdk.Utils.FEE_FACTOR * sdk.TxInput.getEstimatedNumberOfBytes()));
 
                 estimated_tx_fee = sdk.JSBI.BigInt(sdk.Utils.FEE_FACTOR *
-                    sdk.Transaction.getEstimatedNumberOfBytes(in_utxos.length, output_count, payload.data.length));
+                    sdk.Transaction.getEstimatedNumberOfBytes(in_utxos.length, output_count, payload.length));
 
                 in_utxos.forEach((u: sdk.UnspentTxOutput) => builder.addInput(u.utxo, u.amount));
                 // Build a transaction
                 let tx = builder
                     .assignPayload(payload)
-                    .sign(sdk.TxType.Payment, estimated_tx_fee, payload_fee);
+                    .sign(sdk.OutputType.Payment, estimated_tx_fee, payload_fee);
 
                 // Get the size of the transaction
                 let tx_size = tx.getNumberOfBytes();
@@ -87,12 +87,12 @@ export class VoteSender
                     );
                     in_utxos.forEach((u: sdk.UnspentTxOutput) => builder.addInput(u.utxo, u.amount));
                     estimated_tx_fee = sdk.JSBI.BigInt(sdk.Utils.FEE_FACTOR *
-                        sdk.Transaction.getEstimatedNumberOfBytes(in_utxos.length, output_count, payload.data.length));
+                        sdk.Transaction.getEstimatedNumberOfBytes(in_utxos.length, output_count, payload.length));
 
                     // Build a transaction
                     tx = builder
                         .assignPayload(payload)
-                        .sign(sdk.TxType.Payment, estimated_tx_fee, payload_fee);
+                        .sign(sdk.OutputType.Payment, estimated_tx_fee, payload_fee);
 
                     // Get the size of the transaction
                     tx_size = tx.getNumberOfBytes();
@@ -107,7 +107,7 @@ export class VoteSender
                 in_utxos.forEach((u: sdk.UnspentTxOutput) => builder.addInput(u.utxo, u.amount));
                 tx = builder
                     .assignPayload(payload)
-                    .sign(sdk.TxType.Payment, tx_fee, payload_fee);
+                    .sign(sdk.OutputType.Payment, tx_fee, payload_fee);
 
                 resolve(tx);
             }

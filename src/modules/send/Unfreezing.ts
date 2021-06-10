@@ -1,5 +1,5 @@
 import * as sdk from 'boa-sdk-ts';
-import {TxType} from 'boa-sdk-ts';
+import {OutputType} from 'boa-sdk-ts';
 
 import {logger} from '../common/Logger';
 import {Config} from '../common/Config';
@@ -28,7 +28,7 @@ export class Unfreezing {
                 utxos = await this.boa_client.getUTXOs(sender.address);
                 let frozen: Array<sdk.UnspentTxOutput> = [];
                 utxos.forEach((m) => {
-                    if (m.type == TxType.Freeze)
+                    if (m.type == OutputType.Freeze)
                         frozen.push(m);
                 });
 
@@ -41,7 +41,7 @@ export class Unfreezing {
                     let builder = new sdk.TxBuilder(sender);
                     builder.addInput(frozen[0].utxo, frozen[0].amount);
                     builder.addOutput(sender.address, amount);
-                    let tx = builder.sign(sdk.TxType.Payment, tx_fee);
+                    let tx = builder.sign(sdk.OutputType.Payment, tx_fee);
                     console.log(JSON.stringify(tx));
                     return resolve(tx);
                 } else {

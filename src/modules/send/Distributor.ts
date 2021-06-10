@@ -39,11 +39,16 @@ export class Distributor {
 
                 for (let idx = 0; idx < count; idx++)
                 {
-                    let sum: sdk.JSBI = utxos[idx].amount;
+                    let tx_sz = sdk.Transaction.getEstimatedNumberOfBytes(1, tx_out_count, 0);
+                    let fees = await this.boa_client.getTransactionFee(tx_sz);
+                    let fee = sdk.JSBI.BigInt(fees.medium);
+
+                    let sum: sdk.JSBI = sdk.JSBI.subtract(utxos[idx].amount, fee);
                     let amount = sdk.JSBI.divide(sum, sdk.JSBI.BigInt(tx_out_count));
                     let remain = sdk.JSBI.subtract(sum, sdk.JSBI.multiply(amount, sdk.JSBI.BigInt(tx_out_count)));
 
                     let builder = new sdk.TxBuilder(WK.GenesisKey);
+
                     builder.addInput(utxos[idx].utxo, utxos[idx].amount);
                     for (let key_idx = 0; key_idx < tx_out_count; key_idx++) {
                         if (key_idx < tx_out_count - 1)
@@ -51,7 +56,7 @@ export class Distributor {
                         else
                             builder.addOutput(WK.keys((idx * tx_out_count) + key_idx).address, sdk.JSBI.add(amount, remain));
                     }
-                    let tx = builder.sign(sdk.TxType.Payment);
+                    let tx = builder.sign(sdk.OutputType.Payment, fee);
                     res.push(tx);
                 }
 
@@ -88,8 +93,14 @@ export class Distributor {
                         WK.NODE6().address,
                         WK.NODE7().address
                     ];
-                    let idx = utxos.length-1;
-                    let sum: sdk.JSBI = utxos[idx].amount;
+
+                    let tx_sz = sdk.Transaction.getEstimatedNumberOfBytes(1, validators.length, 0);
+                    let fees = await this.boa_client.getTransactionFee(tx_sz);
+                    let fee = sdk.JSBI.BigInt(fees.medium);
+
+
+                    let idx = utxos.length - 1;
+                    let sum: sdk.JSBI = sdk.JSBI.subtract(utxos[idx].amount, fee);
                     let amount = sdk.JSBI.divide(sum, sdk.JSBI.BigInt(validators.length));
                     let remain = sdk.JSBI.subtract(sum, sdk.JSBI.multiply(amount, sdk.JSBI.BigInt(validators.length)));
                     let builder = new sdk.TxBuilder(WK.GenesisKey);
@@ -100,7 +111,7 @@ export class Distributor {
                         else
                             builder.addOutput(validators[key_idx], sdk.JSBI.add(amount, remain));
                     }
-                    let tx = builder.sign(sdk.TxType.Payment);
+                    let tx = builder.sign(sdk.OutputType.Payment, fee);
                     res.unshift(tx);
                 }
 
@@ -149,7 +160,7 @@ export class Distributor {
                             catch (e) {
                                 logger.error(e);
                             }
-                            await wait(1000);
+                            await wait(5000);
                         }
                     }
                     return resolve({

@@ -66,7 +66,7 @@ export class LargeTxSender
                         for (let key_pair of destination_key_pairs)
                             builder.addOutput(key_pair.address, send_amount);
                         tx = builder
-                            .sign(sdk.TxType.Payment);
+                            .sign(sdk.OutputType.Payment);
                         return resolve(tx);
                     }
                 }

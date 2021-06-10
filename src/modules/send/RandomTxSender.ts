@@ -65,7 +65,7 @@ export class RandomTxSender
                         spent_utxos.forEach((u: sdk.UnspentTxOutput) => builder.addInput(u.utxo, u.amount));
                         tx = builder
                             .addOutput(destination_key_pair.address, send_amount)
-                            .sign(sdk.TxType.Payment);
+                            .sign(sdk.OutputType.Payment);
                         return resolve(tx);
                     }
                 }
