@@ -1,6 +1,6 @@
 import * as express from "express";
 import {
-    Page, Distributor, RandomTxSender, LargeTxSender, Unfreezing, InfoProvider,
+    Page, Distributor, RandomTxSender, LargeTxSender, Unfreezing, TxCanceller, InfoProvider,
     ProposalFeeSender, IProposalFeeLinkData,
     VotingFeeSender, IVotingFeeLinkData,
     VoteSender, IVoteLinkData
@@ -25,7 +25,6 @@ export const register = (app: express.Application) => {
                 menu: page.getMenu()
             });
     });
-
 
     app.get("/PF1200", (req: any, res) => {
         const distributor = new Distributor();
@@ -120,6 +119,30 @@ export const register = (app: express.Application) => {
             .then((result) => {
                 const page = new Page(1, "Result of send transaction");
                 res.render('pf5200',
+                    {
+                        title: page.getTitle(),
+                        menu: page.getMenu(),
+                        result: result
+                    });
+            });
+    });
+
+    app.get("/PF6000", (req: any, res) => {
+        const page = new Page(1, "Send Cancel Transaction");
+        res.render('pf6000',
+            {
+                title: page.getTitle(),
+                menu: page.getMenu()
+            });
+    });
+
+    app.post("/PF6200", (req: any, res) => {
+        let tx_hash: string = req.body.tx_hash;
+        const sender = new TxCanceller(tx_hash);
+        sender.send()
+            .then((result) => {
+                const page = new Page(1, "Result of send transaction");
+                res.render('pf6200',
                     {
                         title: page.getTitle(),
                         menu: page.getMenu(),

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <%- include('partials/html_head') %>
+</head>
+<body>
+<div data-role="page">
+  <%- include('partials/header') %>
+  <div data-role="content" class="jqm-content" style="text-align:center;">
+    <form data-ajax="false" action="/PF6200" method="post">
+      <fieldset>
+        <div class="ui-field-contain">
+          <label for="tx_hash">Hash of Transaction:</label>
+          <input name="tx_hash" id="tx_hash"/>
+        </div>
+        <div class="ui-field-contain">
+          <label for="send">Send Cancel Transaction</label>
+          <button type="submit" id="send" class="ui-shadow ui-btn ui-corner-all ui-mini ui-btn-b">Submit</button>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+  <%- include('partials/footer') %>
+</div>
+</body>
+</html>

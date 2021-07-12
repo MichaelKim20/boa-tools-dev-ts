@@ -33,6 +33,7 @@ export class Page {
         builder.append("							<li><a href=\"PF2000\" data-ajax=\"false\">Send Random Transaction</a></li> \n");
         builder.append("							<li><a href=\"PF4000\" data-ajax=\"false\">Send Large Transaction</a></li> \n");
         builder.append("							<li><a href=\"PF5000\" data-ajax=\"false\">Send Unfrozen Transaction</a></li> \n");
+        builder.append("							<li><a href=\"PF6000\" data-ajax=\"false\">Send Cancel Transaction</a></li> \n");
         builder.append("							<li><a href=\"PF3000\" data-ajax=\"false\">Information</a></li> \n");
         builder.append("						</ul>\n");
         builder.append("					</div>\n");

@@ -53,6 +53,10 @@ export class RandomTxSender
                     if (sdk.JSBI.lessThanOrEqual(sum, sdk.JSBI.BigInt(0)))
                         continue;
 
+                    let tx_sz = sdk.Transaction.getEstimatedNumberOfBytes(2, 2, 0);
+                    let fees = await this.boa_client.getTransactionFee(tx_sz);
+                    let fee = sdk.JSBI.BigInt(fees.medium);
+
                     let range = sdk.JSBI.BigInt(Math.floor(Math.random() * 50) + 20);
                     let send_amount = sdk.JSBI.divide(sdk.JSBI.multiply(sum, range), sdk.JSBI.BigInt(100));
 
@@ -62,10 +66,15 @@ export class RandomTxSender
                     let spent_utxos = utxo_manager.getUTXO(send_amount, height);
 
                     if (spent_utxos.length > 0) {
+
+                        tx_sz = sdk.Transaction.getEstimatedNumberOfBytes(spent_utxos.length, 2, 0);
+                        fees = await this.boa_client.getTransactionFee(tx_sz);
+                        fee = sdk.JSBI.BigInt(fees.medium);
+
                         spent_utxos.forEach((u: sdk.UnspentTxOutput) => builder.addInput(u.utxo, u.amount));
                         tx = builder
                             .addOutput(destination_key_pair.address, send_amount)
-                            .sign(sdk.OutputType.Payment);
+                            .sign(sdk.OutputType.Payment, fee);
                         return resolve(tx);
                     }
                 }

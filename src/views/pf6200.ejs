@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <%- include('partials/html_head') %>
+</head>
+<body>
+<div data-role="page">
+  <%- include('partials/header') %>
+  <div data-role="content" class="jqm-content" style="text-align:center;">
+    <div data-demo-html="true">
+      <ul data-role="listview">
+        <li>Result : <%= result.status %></li>
+        <% if (result.status) { %>
+          <li>Original Transaction Hash : <%= result.original_tx_hash %></li>
+          <li>Original Transaction Size : <%= result.original_tx_size %></li>
+          <li>Original Transaction :</li>
+          <div><%= JSON.stringify(result.original_tx) %></div>
+          <li>Cancel Transaction Hash : <%= result.cancel_tx_hash %></li>
+          <li>Cancel Transaction Size : <%= result.cancel_tx_size %></li>
+          <li>Cancel Transaction :</li>
+          <div><%= JSON.stringify(result.cancel_tx) %></div>
+        <% } %>
+        <% if (!result.status) { %>
+          <li>Error : <%= result.error %></li>
+        <% } %>
+      </ul>
+    </div>
+    <p></p>
+    <a href="/PF6000" data-ajax="false" class="ui-btn ui-btn-b">Back</a>
+  </div>
+  <%- include('partials/footer') %>
+</div>
+</body>
+</html>
