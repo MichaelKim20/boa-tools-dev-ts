@@ -125,7 +125,6 @@ export class RandomTxSender2In
                     let tx:sdk.Transaction;
                     try {
                         tx = await this.createTransaction(height);
-                        console.log(JSON.stringify(tx));
                     }
                     catch (e) {
                         return resolve({
