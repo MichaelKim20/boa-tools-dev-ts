@@ -31,6 +31,7 @@ export class Page {
         builder.append("						<ul data-role=\"listview\">\n");
         builder.append("							<li><a href=\"PF1000\" data-ajax=\"false\">Distribute Genesis Coins</a></li> \n");
         builder.append("							<li><a href=\"PF2000\" data-ajax=\"false\">Send Random Transaction</a></li> \n");
+        builder.append("							<li><a href=\"PF7000\" data-ajax=\"false\">Send Random Transaction 2</a></li> \n");
         builder.append("							<li><a href=\"PF4000\" data-ajax=\"false\">Send Large Transaction</a></li> \n");
         builder.append("							<li><a href=\"PF5000\" data-ajax=\"false\">Send Unfrozen Transaction</a></li> \n");
         builder.append("							<li><a href=\"PF6000\" data-ajax=\"false\">Send Cancel Transaction</a></li> \n");

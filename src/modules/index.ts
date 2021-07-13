@@ -2,6 +2,7 @@ export {Page} from "./core/Page";
 export {StringBuilder} from "./utils/StringBuilder";
 export {Distributor} from "./send/Distributor";
 export {RandomTxSender} from "./send/RandomTxSender";
+export {RandomTxSender2In} from "./send/RandomTxSender2In";
 export {AutoRandomTxSender} from "./send/AutoRandomTxSender";
 export {ProposalFeeSender, IProposalFeeLinkData} from "./send/ProposalFeeSender";
 export {VotingFeeSender, IVotingFeeLinkData} from "./send/VotingFeeSender";

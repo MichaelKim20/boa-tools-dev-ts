@@ -1,6 +1,6 @@
 import * as express from "express";
 import {
-    Page, Distributor, RandomTxSender, LargeTxSender, Unfreezing, TxCanceller, InfoProvider,
+    Page, Distributor, RandomTxSender, RandomTxSender2In, LargeTxSender, Unfreezing, TxCanceller, InfoProvider,
     ProposalFeeSender, IProposalFeeLinkData,
     VotingFeeSender, IVotingFeeLinkData,
     VoteSender, IVoteLinkData
@@ -143,6 +143,30 @@ export const register = (app: express.Application) => {
             .then((result) => {
                 const page = new Page(1, "Result of send transaction");
                 res.render('pf6200',
+                    {
+                        title: page.getTitle(),
+                        menu: page.getMenu(),
+                        result: result
+                    });
+            });
+    });
+
+    app.get("/PF7000", (req: any, res) => {
+        const page = new Page(1, "Send Random Transaction 2");
+        res.render('pf7000',
+            {
+                title: page.getTitle(),
+                menu: page.getMenu()
+            });
+    });
+
+
+    app.get("/PF7200", (req: any, res) => {
+        const sender = new RandomTxSender2In();
+        sender.send()
+            .then((result:any) => {
+                const page = new Page(1, "Result of send transaction");
+                res.render('pf7200',
                     {
                         title: page.getTitle(),
                         menu: page.getMenu(),
