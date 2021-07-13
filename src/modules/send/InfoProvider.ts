@@ -18,13 +18,11 @@ export class InfoProvider {
         return new Promise<any>(async (resolve) => {
             try {
                 let height = await this.boa_client.getBlockHeight();
-                let validators = await this.boa_client.getAllValidators();
                 resolve({
                     status: true,
                     error: "",
                     data: {
                         height: height.toString(),
-                        validators: validators.map((m) => m.address.toString()),
                     },
                 });
             } catch (e) {
@@ -34,7 +32,6 @@ export class InfoProvider {
                     error: e.message,
                     data: {
                         height: "",
-                        validators: "",
                     },
                 });
             }
