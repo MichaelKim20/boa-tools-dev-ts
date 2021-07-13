@@ -9,28 +9,27 @@
     License:
         MIT License. See LICENSE for details.
 
- *******************************************************************************/
+*******************************************************************************/
 
-import { Config } from '../src/modules/common/Config';
+import { Config } from "../src/modules/common/Config";
 
-import * as assert from 'assert';
+import * as assert from "assert";
 
-describe('Test of Config', () => {
-    it ('Test parsing the settings of a string', () => {
-        let config_content =
-            [
-                "server:",
-                "   stoa_endpoint: http://127.0.0.1:3826",
-                "   agora_endpoint: http://127.0.0.1:2826",
-                "logging:",
-                "   folder: /stoa/logs/",
-                "   level: debug",
-                "process:",
-                "   enable: true",
-                "   only_genesis: true",
-                "   delay: 1000",
-                "   key_count: 100"
-            ].join("\n");
+describe("Test of Config", () => {
+    it("Test parsing the settings of a string", () => {
+        let config_content = [
+            "server:",
+            "   stoa_endpoint: http://127.0.0.1:3826",
+            "   agora_endpoint: http://127.0.0.1:2826",
+            "logging:",
+            "   folder: /stoa/logs/",
+            "   level: debug",
+            "process:",
+            "   enable: true",
+            "   only_genesis: true",
+            "   delay: 1000",
+            "   key_count: 100",
+        ].join("\n");
         let config: Config = new Config();
         config.readFromString(config_content);
         assert.strictEqual(config.server.stoa_endpoint, "http://127.0.0.1:3826");
