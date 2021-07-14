@@ -1,7 +1,6 @@
-import { KeyPair, PublicKey, SecretKey } from 'boa-sdk-ts';
+import { KeyPair, PublicKey, SecretKey } from "boa-sdk-ts";
 
-export class WK
-{
+export class WK {
     public static _keys: Array<KeyPair> = [];
     public static _map: Map<string, KeyPair> = new Map<string, KeyPair>();
 
@@ -14,10 +13,11 @@ export class WK
     public static Node6Key: KeyPair;
     public static Node7Key: KeyPair;
 
-    public static make ()
-    {
+    public static make() {
         WK.GenesisKey = KeyPair.fromSeed(new SecretKey("SDN7BBGE6Z6OQM3K4PACLTZUJ5QX4AY4QPDQ2JJ2JCFWCG2OIYYALIRY"));
-        WK.CommonsBudgetKey = KeyPair.fromSeed(new SecretKey("SCJXWGALR7KUFYNLFRCU7JCSVZC33Q4OJLEXYJ4YRWBN5XHMO3AQXU6A"));
+        WK.CommonsBudgetKey = KeyPair.fromSeed(
+            new SecretKey("SCJXWGALR7KUFYNLFRCU7JCSVZC33Q4OJLEXYJ4YRWBN5XHMO3AQXU6A")
+        );
         WK.Node2Key = KeyPair.fromSeed(new SecretKey("SAQXRDHTWME4GUIVNYCKPN433VJ4BJP2L2T7UWHGSSW47VFC67EQFY3S"));
         WK.Node3Key = KeyPair.fromSeed(new SecretKey("SC3H3ADGT3YGLMDWCLKZ2GILDHDTC4WDE7M3G4URQPWJZZM43TTAM2QG"));
         WK.Node4Key = KeyPair.fromSeed(new SecretKey("SBIJAVYYCSRV5RNO2WVTT25H6VZTEV3YSE7U7WT7UQUNSVBUGB6QNBWG"));
@@ -1413,29 +1413,21 @@ export class WK
         WK._keys.push(WK.Node6Key);
         WK._keys.push(WK.Node7Key);
 
-        for (let key of WK._keys)
-            WK._map.set(key.address.toString(), key);
+        for (let key of WK._keys) WK._map.set(key.address.toString(), key);
     }
 
-    public static keys(key: number | string): KeyPair
-    {
-        if (WK._keys.length === 0)
-            WK.make();
+    public static keys(key: number | string): KeyPair {
+        if (WK._keys.length === 0) WK.make();
 
-        if (typeof key === "number")
-        {
-            if ((key >= 0) && (key < WK._keys.length))
-                return WK._keys[key];
+        if (typeof key === "number") {
+            if (key >= 0 && key < WK._keys.length) return WK._keys[key];
             else {
                 console.error("Can't found KeyPair in WK");
                 process.exit(1);
             }
-        }
-        else
-        {
+        } else {
             let keypair = WK._map.get(key);
-            if (keypair !== undefined)
-                return keypair;
+            if (keypair !== undefined) return keypair;
             else {
                 console.error("Can't found KeyPair in WK");
                 process.exit(1);
@@ -1443,66 +1435,50 @@ export class WK
         }
     }
 
-    public static Genesis (): KeyPair
-    {
-        if (WK._keys.length === 0)
-            WK.make();
+    public static Genesis(): KeyPair {
+        if (WK._keys.length === 0) WK.make();
 
         return WK.GenesisKey;
     }
 
-    public static CommonsBudget (): KeyPair
-    {
-        if (WK._keys.length === 0)
-            WK.make();
+    public static CommonsBudget(): KeyPair {
+        if (WK._keys.length === 0) WK.make();
 
         return WK.CommonsBudgetKey;
     }
 
-    public static NODE2 (): KeyPair
-    {
-        if (WK._keys.length === 0)
-            WK.make();
+    public static NODE2(): KeyPair {
+        if (WK._keys.length === 0) WK.make();
 
         return WK.Node2Key;
     }
 
-    public static NODE3 (): KeyPair
-    {
-        if (WK._keys.length === 0)
-            WK.make();
+    public static NODE3(): KeyPair {
+        if (WK._keys.length === 0) WK.make();
 
         return WK.Node3Key;
     }
 
-    public static NODE4 (): KeyPair
-    {
-        if (WK._keys.length === 0)
-            WK.make();
+    public static NODE4(): KeyPair {
+        if (WK._keys.length === 0) WK.make();
 
         return WK.Node4Key;
     }
 
-    public static NODE5 (): KeyPair
-    {
-        if (WK._keys.length === 0)
-            WK.make();
+    public static NODE5(): KeyPair {
+        if (WK._keys.length === 0) WK.make();
 
         return WK.Node5Key;
     }
 
-    public static NODE6 (): KeyPair
-    {
-        if (WK._keys.length === 0)
-            WK.make();
+    public static NODE6(): KeyPair {
+        if (WK._keys.length === 0) WK.make();
 
         return WK.Node6Key;
     }
 
-    public static NODE7 (): KeyPair
-    {
-        if (WK._keys.length === 0)
-            WK.make();
+    public static NODE7(): KeyPair {
+        if (WK._keys.length === 0) WK.make();
 
         return WK.Node7Key;
     }

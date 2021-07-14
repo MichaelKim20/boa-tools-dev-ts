@@ -1,27 +1,25 @@
-import * as sdk from 'boa-sdk-ts';
+import * as sdk from "boa-sdk-ts";
 
-import { logger, Logger } from '../common/Logger';
-import { Config } from '../common/Config';
-import { prepare, wait } from '../utils/Process';
-import { WK } from '../utils/WK';
+import { logger, Logger } from "../common/Logger";
+import { Config } from "../common/Config";
+import { prepare, wait } from "../utils/Process";
+import { WK } from "../utils/WK";
 
 export class Distributor {
     private boa_client: sdk.BOAClient;
     private config: Config;
 
-    constructor ()
-    {
+    constructor() {
         this.config = Config.getInstance();
         this.boa_client = new sdk.BOAClient(
             this.config.server.stoa_endpoint.toString(),
-            this.config.server.agora_endpoint.toString());
+            this.config.server.agora_endpoint.toString()
+        );
     }
 
-    createTransaction (height: sdk.JSBI): Promise<sdk.Transaction[]>
-    {
+    createTransaction(height: sdk.JSBI): Promise<sdk.Transaction[]> {
         return new Promise<sdk.Transaction[]>(async (resolve, reject) => {
-            try
-            {
+            try {
                 let res: sdk.Transaction[] = [];
                 let key_count = this.config.process.key_count;
                 let utxos: Array<sdk.UnspentTxOutput>;
@@ -31,14 +29,12 @@ export class Distributor {
                     logger.error(e);
                     return reject(e);
                 }
-                if (utxos.length < 1)
-                    return resolve([]);
+                if (utxos.length < 1) return resolve([]);
 
-                let count = utxos.length-1;
+                let count = utxos.length - 1;
                 let tx_out_count = Math.ceil(key_count / count);
 
-                for (let idx = 0; idx < count; idx++)
-                {
+                for (let idx = 0; idx < count; idx++) {
                     let tx_sz = sdk.Transaction.getEstimatedNumberOfBytes(1, tx_out_count, 0);
                     let fees = await this.boa_client.getTransactionFee(tx_sz);
                     let fee = sdk.JSBI.BigInt(fees.medium);
@@ -52,9 +48,12 @@ export class Distributor {
                     builder.addInput(utxos[idx].utxo, utxos[idx].amount);
                     for (let key_idx = 0; key_idx < tx_out_count; key_idx++) {
                         if (key_idx < tx_out_count - 1)
-                            builder.addOutput(WK.keys((idx * tx_out_count) + key_idx).address, amount);
+                            builder.addOutput(WK.keys(idx * tx_out_count + key_idx).address, amount);
                         else
-                            builder.addOutput(WK.keys((idx * tx_out_count) + key_idx).address, sdk.JSBI.add(amount, remain));
+                            builder.addOutput(
+                                WK.keys(idx * tx_out_count + key_idx).address,
+                                sdk.JSBI.add(amount, remain)
+                            );
                     }
                     let tx = builder.sign(sdk.OutputType.Payment, fee);
                     res.push(tx);
@@ -91,13 +90,30 @@ export class Distributor {
                         WK.NODE4().address,
                         WK.NODE5().address,
                         WK.NODE6().address,
-                        WK.NODE7().address
+                        WK.NODE7().address,
+                        WK.keys(0).address,
+                        WK.keys(0).address,
+                        WK.keys(0).address,
+                        WK.keys(0).address,
+                        WK.keys(0).address,
+                        WK.keys(0).address,
+                        WK.keys(0).address,
+                        WK.keys(0).address,
+                        WK.keys(0).address,
+                        WK.keys(0).address,
+                        WK.keys(0).address,
+                        WK.keys(0).address,
+                        WK.keys(0).address,
+                        WK.keys(0).address,
+                        WK.keys(0).address,
+                        WK.keys(0).address,
+                        WK.keys(0).address,
+                        WK.keys(0).address,
                     ];
 
                     let tx_sz = sdk.Transaction.getEstimatedNumberOfBytes(1, validators.length, 0);
                     let fees = await this.boa_client.getTransactionFee(tx_sz);
                     let fee = sdk.JSBI.BigInt(fees.medium);
-
 
                     let idx = utxos.length - 1;
                     let sum: sdk.JSBI = sdk.JSBI.subtract(utxos[idx].amount, fee);
@@ -106,30 +122,23 @@ export class Distributor {
                     let builder = new sdk.TxBuilder(WK.GenesisKey);
                     builder.addInput(utxos[idx].utxo, utxos[idx].amount);
                     for (let key_idx = 0; key_idx < validators.length; key_idx++) {
-                        if (key_idx < validators.length - 1)
-                            builder.addOutput(validators[key_idx], amount);
-                        else
-                            builder.addOutput(validators[key_idx], sdk.JSBI.add(amount, remain));
+                        if (key_idx < validators.length - 1) builder.addOutput(validators[key_idx], amount);
+                        else builder.addOutput(validators[key_idx], sdk.JSBI.add(amount, remain));
                     }
                     let tx = builder.sign(sdk.OutputType.Payment, fee);
                     res.unshift(tx);
                 }
 
                 return resolve(res);
-            }
-            catch (e)
-            {
+            } catch (e) {
                 reject(e);
             }
         });
     }
 
-    makeBlock(): Promise<any>
-    {
-        return new Promise<any>(async (resolve, reject) =>
-        {
-            try
-            {
+    makeBlock(): Promise<any> {
+        return new Promise<any>(async (resolve, reject) => {
+            try {
                 let height: sdk.JSBI = sdk.JSBI.BigInt(0);
                 try {
                     height = await this.boa_client.getBlockHeight();
@@ -137,15 +146,14 @@ export class Distributor {
                     logger.error(e);
                     return resolve({
                         status: false,
-                        error: e
+                        error: e,
                     });
                 }
 
                 if (sdk.JSBI.equal(height, sdk.JSBI.BigInt(0))) {
-
                     let send_count = 0;
                     let total_count = 0;
-                    let hash:Array<string> = [];
+                    let hash: Array<string> = [];
                     let txs = await this.createTransaction(height);
                     total_count = txs.length;
                     if (txs.length > 0) {
@@ -156,8 +164,7 @@ export class Distributor {
                             try {
                                 await this.boa_client.sendTransaction(tx);
                                 send_count++;
-                            }
-                            catch (e) {
+                            } catch (e) {
                                 logger.error(e);
                             }
                             await wait(5000);
@@ -165,33 +172,28 @@ export class Distributor {
                     }
                     return resolve({
                         status: true,
-                        data : {
+                        data: {
                             send_count: send_count,
                             total_count: total_count,
-                            hash: hash
-                        }
+                            hash: hash,
+                        },
                     });
-                }
-                else
-                {
+                } else {
                     return resolve({
                         status: false,
-                        error: "The block height isn't 0"
+                        error: "The block height isn't 0",
                     });
                 }
-            }
-            catch (e)
-            {
+            } catch (e) {
                 return resolve({
                     status: false,
-                    error: e
+                    error: e,
                 });
             }
         });
     }
 
-    send(): Promise<any>
-    {
+    send(): Promise<any> {
         return new Promise<any>(async (resolve) => {
             await prepare();
             WK.make();

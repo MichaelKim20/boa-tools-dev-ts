@@ -11,20 +11,19 @@
 
 *******************************************************************************/
 
-import { Utils } from 'boa-sdk-ts';
+import { Utils } from "boa-sdk-ts";
 
-import {ArgumentParser} from 'argparse';
-import extend from 'extend';
+import { ArgumentParser } from "argparse";
+import extend from "extend";
 import fs from "fs";
-import path from 'path';
-import { URL } from 'url';
-import yaml from 'js-yaml';
+import path from "path";
+import { URL } from "url";
+import yaml from "js-yaml";
 
 /**
  * Main config
  */
-export class Config implements IConfig
-{
+export class Config implements IConfig {
     /**
      * Server config
      */
@@ -42,29 +41,25 @@ export class Config implements IConfig
     /**
      * Constructor
      */
-    constructor ()
-    {
+    constructor() {
         this.server = new ServerConfig();
         this.logging = new LoggingConfig();
         this.process = new ProcessConfig();
     }
 
-    public static saveInstance(c: Config)
-    {
+    public static saveInstance(c: Config) {
         Config.instance = c;
     }
 
-    public static getInstance(): Config
-    {
+    public static getInstance(): Config {
         return Config.instance;
     }
     /**
      * Reads from file
      * @param config_file The file name of configuration
      */
-    public readFromFile (config_file: string)
-    {
-        let config_content = fs.readFileSync(path.resolve(Utils.getInitCWD(), config_file), 'utf8');
+    public readFromFile(config_file: string) {
+        let config_content = fs.readFileSync(path.resolve(Utils.getInitCWD(), config_file), "utf8");
         this.readFromString(config_content);
     }
 
@@ -72,8 +67,7 @@ export class Config implements IConfig
      * Reads from string
      * @param config_content The content of configuration
      */
-    public readFromString (config_content: string)
-    {
+    public readFromString(config_content: string) {
         const cfg = yaml.safeLoad(config_content) as IConfig;
         this.server.readFromObject(cfg.server);
         this.logging.readFromObject(cfg.logging);
@@ -83,11 +77,10 @@ export class Config implements IConfig
     /**
      * Parses the command line arguments, Reads from the configuration file
      */
-    public static createWithArgument (): Config
-    {
+    public static createWithArgument(): Config {
         // Parse the arguments
         const parser = new ArgumentParser();
-        parser.add_argument('-c', '--config', {
+        parser.add_argument("-c", "--config", {
             default: "config.yaml",
             help: "Path to the config file to use",
         });
@@ -100,12 +93,9 @@ export class Config implements IConfig
         }
 
         let cfg = new Config();
-        try
-        {
+        try {
             cfg.readFromFile(configPath);
-        }
-        catch (error)
-        {
+        } catch (error) {
             // Logging setup has not been completed and is output to the console.
             console.error(error.message);
 
@@ -116,22 +106,26 @@ export class Config implements IConfig
     }
 }
 
-export class ProcessConfig implements IProcessConfig
-{
+export class ProcessConfig implements IProcessConfig {
     public enable: boolean;
 
-    public only_genesis: boolean
+    public only_genesis: boolean;
 
-    public delay : number;
+    public delay: number;
 
     public key_count: number;
 
     public auto_send: boolean;
 
-    constructor (enable?: boolean, only_genesis?: boolean, delay?: number, key_count?: number, auto_send?: boolean)
-    {
+    constructor(enable?: boolean, only_genesis?: boolean, delay?: number, key_count?: number, auto_send?: boolean) {
         let conf = extend(true, {}, ProcessConfig.defaultValue());
-        extend(true, conf, {enable: enable, only_genesis: only_genesis, delay : delay, key_count: key_count, auto_send: auto_send});
+        extend(true, conf, {
+            enable: enable,
+            only_genesis: only_genesis,
+            delay: delay,
+            key_count: key_count,
+            auto_send: auto_send,
+        });
 
         this.enable = conf.enable;
         this.only_genesis = conf.only_genesis;
@@ -144,8 +138,7 @@ export class ProcessConfig implements IProcessConfig
      * Reads from Object
      * @param config The object of IServerConfig
      */
-    public readFromObject (config: IProcessConfig)
-    {
+    public readFromObject(config: IProcessConfig) {
         let conf = extend(true, {}, ProcessConfig.defaultValue());
         extend(true, conf, config);
 
@@ -159,23 +152,21 @@ export class ProcessConfig implements IProcessConfig
     /**
      * Returns default value
      */
-    public static defaultValue (): IProcessConfig
-    {
+    public static defaultValue(): IProcessConfig {
         return {
             enable: true,
             only_genesis: false,
             delay: 3000,
             key_count: 1000,
-            auto_send: true
-        }
+            auto_send: true,
+        };
     }
 }
 
 /**
  * Server config
  */
-export class ServerConfig implements IServerConfig
-{
+export class ServerConfig implements IServerConfig {
     /**
      * THe address to which we bind
      */
@@ -191,10 +182,9 @@ export class ServerConfig implements IServerConfig
      * @param stoa_endpoint The endpoint of Stao
      * @param agora_endpoint The endpoint of Agora
      */
-    constructor (stoa_endpoint?: string, agora_endpoint?: string)
-    {
+    constructor(stoa_endpoint?: string, agora_endpoint?: string) {
         let conf = extend(true, {}, ServerConfig.defaultValue());
-        extend(true, conf, {stoa_endpoint: stoa_endpoint, agora_endpoint: agora_endpoint});
+        extend(true, conf, { stoa_endpoint: stoa_endpoint, agora_endpoint: agora_endpoint });
 
         this.stoa_endpoint = conf.stoa_endpoint;
         this.agora_endpoint = conf.agora_endpoint;
@@ -204,8 +194,7 @@ export class ServerConfig implements IServerConfig
      * Reads from Object
      * @param config The object of IServerConfig
      */
-    public readFromObject (config: IServerConfig)
-    {
+    public readFromObject(config: IServerConfig) {
         let conf = extend(true, {}, ServerConfig.defaultValue());
         extend(true, conf, config);
 
@@ -216,20 +205,18 @@ export class ServerConfig implements IServerConfig
     /**
      * Returns default value
      */
-    public static defaultValue (): IServerConfig
-    {
+    public static defaultValue(): IServerConfig {
         return {
             stoa_endpoint: new URL("http://127.0.0.1:3836"),
-            agora_endpoint: new URL("http://127.0.0.1:2826")
-        }
+            agora_endpoint: new URL("http://127.0.0.1:2826"),
+        };
     }
 }
 
 /**
  * Logging config
  */
-export class LoggingConfig implements ILoggingConfig
-{
+export class LoggingConfig implements ILoggingConfig {
     /**
      * The path of logging files
      */
@@ -248,8 +235,7 @@ export class LoggingConfig implements ILoggingConfig
     /**
      * Constructor
      */
-    constructor ()
-    {
+    constructor() {
         const defaults = LoggingConfig.defaultValue();
         this.folder = path.resolve(Utils.getInitCWD(), defaults.folder);
         this.level = defaults.level;
@@ -260,36 +246,30 @@ export class LoggingConfig implements ILoggingConfig
      * Reads from Object
      * @param config The object of ILoggingConfig
      */
-    public readFromObject (config: ILoggingConfig)
-    {
-        if (config.folder)
-            this.folder = path.resolve(Utils.getInitCWD(), config.folder);
-        if (config.level)
-            this.level = config.level;
-        if (config.console !== undefined)
-            this.console = config.console;
+    public readFromObject(config: ILoggingConfig) {
+        if (config.folder) this.folder = path.resolve(Utils.getInitCWD(), config.folder);
+        if (config.level) this.level = config.level;
+        if (config.console !== undefined) this.console = config.console;
     }
 
     /**
      * Returns default value
      */
-    public static defaultValue (): ILoggingConfig
-    {
+    public static defaultValue(): ILoggingConfig {
         return {
             folder: path.resolve(Utils.getInitCWD(), "logs/"),
             level: "info",
-            console: false
-        }
+            console: false,
+        };
     }
 }
 
-export interface IProcessConfig
-{
+export interface IProcessConfig {
     enable: boolean;
 
-    only_genesis: boolean
+    only_genesis: boolean;
 
-    delay : number;
+    delay: number;
 
     key_count: number;
 
@@ -299,8 +279,7 @@ export interface IProcessConfig
 /**
  * The interface of server config
  */
-export interface IServerConfig
-{
+export interface IServerConfig {
     /**
      * The endpoint of Stoa
      */
@@ -315,8 +294,7 @@ export interface IServerConfig
 /**
  * The interface of logging config
  */
-export interface ILoggingConfig
-{
+export interface ILoggingConfig {
     /**
      * The path of logging files
      */
@@ -326,7 +304,6 @@ export interface ILoggingConfig
      * The level of logging
      */
     level: string;
-
     /**
      * Whether the console is enabled as well
      */
@@ -336,8 +313,7 @@ export interface ILoggingConfig
 /**
  * The interface of main config
  */
-export interface IConfig
-{
+export interface IConfig {
     /**
      * Server config
      */
@@ -347,7 +323,6 @@ export interface IConfig
      * Logging config
      */
     logging: ILoggingConfig;
-
 
     process: IProcessConfig;
 }

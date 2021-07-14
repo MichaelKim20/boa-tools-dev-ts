@@ -8,14 +8,13 @@ export class StringBuilder {
         if (value) {
             this.strings.push(value);
         }
-    };
+    }
 
     public clear() {
         this.strings.length = 1;
-    };
+    }
 
     public toString(): string {
         return this.strings.join(" ");
-    };
+    }
 }
-
