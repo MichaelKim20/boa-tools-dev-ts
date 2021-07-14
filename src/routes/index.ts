@@ -14,6 +14,7 @@ import {
     IVotingFeeLinkData,
     VoteSender,
     IVoteLinkData,
+    ManyTxSender,
 } from "../modules";
 
 export const register = (app: express.Application) => {
@@ -152,6 +153,26 @@ export const register = (app: express.Application) => {
         sender.send().then((result: any) => {
             const page = new Page(1, "Result of send transaction");
             res.render("pf7200", {
+                title: page.getTitle(),
+                menu: page.getMenu(),
+                result: result,
+            });
+        });
+    });
+
+    app.get("/PF8000", (req: any, res) => {
+        const page = new Page(1, "Send Many Transaction");
+        res.render("pf8000", {
+            title: page.getTitle(),
+            menu: page.getMenu(),
+        });
+    });
+
+    app.get("/PF8200", (req: any, res) => {
+        const sender = new ManyTxSender();
+        sender.send().then((result) => {
+            const page = new Page(1, "Result of send transaction");
+            res.render("pf8200", {
                 title: page.getTitle(),
                 menu: page.getMenu(),
                 result: result,
