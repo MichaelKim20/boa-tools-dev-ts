@@ -186,7 +186,7 @@ export class Distributor {
                     });
                 }
 
-                if (sdk.JSBI.lessThan(height, sdk.JSBI.BigInt(10))) {
+                if (sdk.JSBI.lessThan(height, sdk.JSBI.BigInt(30))) {
                     let send_count = 0;
                     let total_count = 0;
                     let hash: Array<string> = [];
