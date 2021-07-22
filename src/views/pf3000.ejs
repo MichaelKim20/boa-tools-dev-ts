@@ -12,6 +12,10 @@
         <li>Result : <%= result.status %></li>
         <% if (result.status) { %>
           <li>Height : <%= result.data.height %></li>
+          <li>Validators : </li>
+          <% for (var idx = 0; idx < result.data.validators.length; idx++) { %>
+            <li><%= ">> " + result.data.validators[idx] %></li>
+          <% } %>
         <% } %>
         <% if (!result.status) { %>
           <li>Error : <%= result.error %></li>
