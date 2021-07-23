@@ -250,9 +250,9 @@ export const register = (app: express.Application) => {
             res.status(400).send("missing parameter");
             return;
         }
-        logger.info("/proposal/fee", linkData);
-        let data: IVotingFeeLinkData = JSON.parse(linkData);
-        let sender = new VotingFeeSender(data);
+        logger.info(`/proposal/fee - ${linkData}`);
+        let data: IProposalFeeLinkData = JSON.parse(linkData);
+        let sender = new ProposalFeeSender(data);
         sender
             .send()
             .then((result) => {
@@ -269,7 +269,7 @@ export const register = (app: express.Application) => {
             res.status(400).send("missing parameter");
             return;
         }
-        logger.info("/proposal/data", linkData);
+        logger.info(`/proposal/data - ${linkData}`);
         let data: IVotingFeeLinkData = JSON.parse(linkData);
         let sender = new VotingFeeSender(data);
         sender
@@ -288,7 +288,7 @@ export const register = (app: express.Application) => {
             res.status(400).send("missing parameter");
             return;
         }
-        logger.info("/proposal/vote", linkData);
+        logger.info(`/proposal/vote - ${linkData}`);
         let data: IVoteLinkData = JSON.parse(linkData);
         let sender = new VoteSender(data);
         sender
