@@ -16,6 +16,7 @@ import {
     IVoteLinkData,
     ManyTxSender,
 } from "../modules";
+import { logger, Logger } from "../modules/common/Logger";
 
 export const register = (app: express.Application) => {
     // home page
@@ -249,16 +250,17 @@ export const register = (app: express.Application) => {
             res.status(400).send("missing parameter");
             return;
         }
+        logger.info("/proposal/fee", linkData);
         let data: IVotingFeeLinkData = JSON.parse(linkData);
         let sender = new VotingFeeSender(data);
-        sender.send().then((result) => {
-            const page = new Page(2, "Result of voting fee transfer");
-            res.render("pg2200", {
-                title: page.getTitle(),
-                menu: page.getMenu(),
-                result: result,
+        sender
+            .send()
+            .then((result) => {
+                res.status(200).send("");
+            })
+            .catch((reason) => {
+                res.status(500).send("");
             });
-        });
     });
 
     app.get("/proposal/data", (req: any, res) => {
@@ -267,16 +269,17 @@ export const register = (app: express.Application) => {
             res.status(400).send("missing parameter");
             return;
         }
+        logger.info("/proposal/data", linkData);
         let data: IVotingFeeLinkData = JSON.parse(linkData);
         let sender = new VotingFeeSender(data);
-        sender.send().then((result) => {
-            const page = new Page(2, "Result of voting fee transfer");
-            res.render("pg2200", {
-                title: page.getTitle(),
-                menu: page.getMenu(),
-                result: result,
+        sender
+            .send()
+            .then((result) => {
+                res.status(200).send("");
+            })
+            .catch((reason) => {
+                res.status(500).send("");
             });
-        });
     });
 
     app.get("/proposal/vote", (req: any, res) => {
@@ -285,15 +288,16 @@ export const register = (app: express.Application) => {
             res.status(400).send("missing parameter");
             return;
         }
+        logger.info("/proposal/vote", linkData);
         let data: IVoteLinkData = JSON.parse(linkData);
         let sender = new VoteSender(data);
-        sender.send().then((result) => {
-            const page = new Page(2, "Result of vote");
-            res.render("pg3200", {
-                title: page.getTitle(),
-                menu: page.getMenu(),
-                result: result,
+        sender
+            .send()
+            .then((result) => {
+                res.status(200).send("");
+            })
+            .catch((reason) => {
+                res.status(500).send("");
             });
-        });
     });
 };
