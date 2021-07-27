@@ -66,7 +66,7 @@ app.listen(port, () => {
 const auto_sender = new AutoRandomTxSender();
 const cron = require("node-cron");
 const start_tm = new Date();
-cron.schedule("*/5 * * * * *", () => {
+cron.schedule("*/10 * * * * *", () => {
     if (config.process.auto_send) {
         const diff = new Date().getTime() - start_tm.getTime();
         if (diff > 30 * 1000) {
