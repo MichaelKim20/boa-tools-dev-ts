@@ -62,11 +62,12 @@ app.listen(port, () => {
     // tslint:disable-next-line:no-console
     console.log(`server started at http://localhost:${port}`);
 });
-
+const sec = config.process.delay / 1000;
 const auto_sender = new AutoRandomTxSender();
 const cron = require("node-cron");
 const start_tm = new Date();
-cron.schedule("*/10 * * * * *", () => {
+const text = `*/${sec} * * * * *`;
+cron.schedule(text, () => {
     if (config.process.auto_send) {
         const diff = new Date().getTime() - start_tm.getTime();
         if (diff > 300 * 1000) {

@@ -203,7 +203,7 @@ export class Distributor {
                             } catch (e) {
                                 logger.error(e);
                             }
-                            await wait(10000);
+                            await wait(Config.getInstance().process.delay);
                         }
                     }
                     return resolve({
