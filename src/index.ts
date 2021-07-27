@@ -69,7 +69,7 @@ const start_tm = new Date();
 cron.schedule("*/10 * * * * *", () => {
     if (config.process.auto_send) {
         const diff = new Date().getTime() - start_tm.getTime();
-        if (diff > 30 * 1000) {
+        if (diff > 300 * 1000) {
             auto_sender.send().then((result) => {
                 console.log(`AutoSend: Status = ${result.status}; Hash = ${result.data}`);
             });
