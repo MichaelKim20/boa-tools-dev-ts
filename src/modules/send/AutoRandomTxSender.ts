@@ -45,14 +45,14 @@ export class AutoRandomTxSender {
                     let utxo_manager = new sdk.UTXOManager(utxos);
 
                     let sum = utxo_manager.getSum()[0];
-                    if (sdk.JSBI.lessThanOrEqual(sum, sdk.JSBI.BigInt(0))) continue;
+                    if (sdk.JSBI.lessThanOrEqual(sum.value, sdk.JSBI.BigInt(0))) continue;
 
                     let tx_sz = sdk.Transaction.getEstimatedNumberOfBytes(2, 2, 0);
                     let fees = await this.boa_client.getTransactionFee(tx_sz);
                     let fee = sdk.JSBI.BigInt(fees.medium);
 
                     let range = sdk.JSBI.BigInt(Math.floor(Math.random() * 50) + 20);
-                    let send_amount = sdk.JSBI.divide(sdk.JSBI.multiply(sum, range), sdk.JSBI.BigInt(100));
+                    let send_amount = sdk.JSBI.divide(sdk.JSBI.multiply(sum.value, range), sdk.JSBI.BigInt(100));
 
                     let spent_utxos = utxo_manager.getUTXO(send_amount, height);
 

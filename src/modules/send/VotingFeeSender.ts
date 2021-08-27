@@ -77,7 +77,7 @@ export class VotingFeeSender {
                 let tx_fee = sdk.JSBI.BigInt(fees.high);
 
                 let sum_amount_utxo = in_utxos.reduce<sdk.JSBI>(
-                    (sum, n) => sdk.JSBI.add(sum, n.amount),
+                    (sum, n) => sdk.JSBI.add(sum, n.amount.value),
                     sdk.JSBI.BigInt(0)
                 );
                 total_fee = sdk.JSBI.add(payload_fee, tx_fee);

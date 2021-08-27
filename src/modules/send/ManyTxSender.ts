@@ -42,7 +42,7 @@ export class ManyTxSender {
                     let utxo_manager = new sdk.UTXOManager(utxos);
 
                     let sum = utxo_manager.getSum()[0];
-                    if (sdk.JSBI.lessThanOrEqual(sum, sdk.JSBI.BigInt(0))) continue;
+                    if (sdk.JSBI.lessThanOrEqual(sum.value, sdk.JSBI.BigInt(0))) continue;
 
                     let tx_sz = sdk.Transaction.getEstimatedNumberOfBytes(3, 2, 0);
                     let fees = await this.boa_client.getTransactionFee(tx_sz);

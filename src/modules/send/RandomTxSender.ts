@@ -180,7 +180,7 @@ export class RandomTxSender {
                             fee: sdk.WalletFeeOption.Medium,
                         });
                         let bal_res = await wallet.getBalance();
-                        if (bal_res.code !== sdk.WalletResultCode.Success || bal_res.balance === undefined) {
+                        if (bal_res.code !== sdk.WalletResultCode.Success || bal_res.data === undefined) {
                             return resolve({
                                 status: false,
                                 error: bal_res.message,
@@ -188,17 +188,17 @@ export class RandomTxSender {
                         }
                         let range = sdk.JSBI.BigInt(Math.floor(Math.random() * 50) + 20);
                         let send_amount = sdk.JSBI.divide(
-                            sdk.JSBI.multiply(bal_res.balance.spendable, range),
+                            sdk.JSBI.multiply(bal_res.data.spendable, range),
                             sdk.JSBI.BigInt(100)
                         );
                         res = await wallet.transfer([
                             {
                                 address: destination_key_pair.address,
-                                amount: send_amount,
+                                amount: new sdk.Amount(send_amount),
                             },
                         ]);
                         if (res.code === sdk.WalletResultCode.Success) {
-                            let h = sdk.hashFull(res.tx).toString();
+                            let h = sdk.hashFull(res.data).toString();
                             logger.info(`TX_HASH (send / ${height.toString()}) : ${h}`);
                             return resolve({
                                 status: true,

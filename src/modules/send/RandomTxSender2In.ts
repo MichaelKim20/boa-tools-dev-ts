@@ -56,14 +56,14 @@ export class RandomTxSender2In {
                     let utxo_manager2 = new sdk.UTXOManager(utxos2);
 
                     let sum1 = utxo_manager1.getSum()[0];
-                    if (sdk.JSBI.lessThanOrEqual(sum1, sdk.JSBI.BigInt(0))) continue;
+                    if (sdk.JSBI.lessThanOrEqual(sum1.value, sdk.JSBI.BigInt(0))) continue;
 
                     let sum2 = utxo_manager2.getSum()[0];
-                    if (sdk.JSBI.lessThanOrEqual(sum2, sdk.JSBI.BigInt(0))) continue;
+                    if (sdk.JSBI.lessThanOrEqual(sum2.value, sdk.JSBI.BigInt(0))) continue;
 
                     let range = sdk.JSBI.BigInt(Math.floor(Math.random() * 50) + 20);
-                    let send_amount1 = sdk.JSBI.divide(sdk.JSBI.multiply(sum1, range), sdk.JSBI.BigInt(100));
-                    let send_amount2 = sdk.JSBI.divide(sdk.JSBI.multiply(sum2, range), sdk.JSBI.BigInt(100));
+                    let send_amount1 = sdk.JSBI.divide(sdk.JSBI.multiply(sum1.value, range), sdk.JSBI.BigInt(100));
+                    let send_amount2 = sdk.JSBI.divide(sdk.JSBI.multiply(sum2.value, range), sdk.JSBI.BigInt(100));
 
                     let spent_utxos1 = utxo_manager1.getUTXO(send_amount1, height);
                     let spent_utxos2 = utxo_manager2.getUTXO(send_amount2, height);

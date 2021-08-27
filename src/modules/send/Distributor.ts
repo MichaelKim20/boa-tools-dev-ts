@@ -39,7 +39,7 @@ export class Distributor {
                     let fees = await this.boa_client.getTransactionFee(tx_sz);
                     let fee = sdk.JSBI.BigInt(fees.medium);
 
-                    let sum: sdk.JSBI = sdk.JSBI.subtract(utxos[idx].amount, fee);
+                    let sum: sdk.JSBI = sdk.JSBI.subtract(utxos[idx].amount.value, fee);
                     let amount = sdk.JSBI.divide(sum, sdk.JSBI.BigInt(tx_out_count));
                     let remain = sdk.JSBI.subtract(sum, sdk.JSBI.multiply(amount, sdk.JSBI.BigInt(tx_out_count)));
 
@@ -152,7 +152,7 @@ export class Distributor {
                     let fee = sdk.JSBI.BigInt(fees.medium);
 
                     let idx = utxos.length - 1;
-                    let sum: sdk.JSBI = sdk.JSBI.subtract(utxos[idx].amount, fee);
+                    let sum: sdk.JSBI = sdk.JSBI.subtract(utxos[idx].amount.value, fee);
                     let amount = sdk.JSBI.divide(sum, sdk.JSBI.BigInt(validators.length));
                     let remain = sdk.JSBI.subtract(sum, sdk.JSBI.multiply(amount, sdk.JSBI.BigInt(validators.length)));
                     let builder = new sdk.TxBuilder(WK.GenesisKey);

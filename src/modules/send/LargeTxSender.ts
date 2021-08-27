@@ -41,13 +41,13 @@ export class LargeTxSender {
                     let utxo_manager = new sdk.UTXOManager(utxos);
 
                     let sum = utxo_manager.getSum()[0];
-                    if (sdk.JSBI.lessThanOrEqual(sum, sdk.JSBI.BigInt(2000))) continue;
+                    if (sdk.JSBI.lessThanOrEqual(sum.value, sdk.JSBI.BigInt(2000))) continue;
 
                     let destination_key_pairs: Array<KeyPair> = [];
                     for (let i = 0; i < 1000; i++) destination_key_pairs.push(WK.keys(i));
                     let builder = new sdk.TxBuilder(source_key_pair);
 
-                    let send_amount = sdk.JSBI.divide(sum, sdk.JSBI.BigInt(2000));
+                    let send_amount = sdk.JSBI.divide(sum.value, sdk.JSBI.BigInt(2000));
                     let total_amount = sdk.JSBI.multiply(send_amount, sdk.JSBI.BigInt(destination_key_pairs.length));
 
                     logger.info(`Sender: ${source_key_pair.address.toString()}`);
