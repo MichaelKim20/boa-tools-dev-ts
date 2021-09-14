@@ -45,18 +45,18 @@ export class ProposalFeeSender {
 
                 let output_count = 2;
                 let estimated_tx_fee = sdk.JSBI.BigInt(
-                    sdk.Utils.FEE_FACTOR * sdk.Transaction.getEstimatedNumberOfBytes(0, output_count, payload.length)
+                    sdk.Utils.FEE_RATE * sdk.Transaction.getEstimatedNumberOfBytes(0, output_count, payload.length)
                 );
                 let total_fee = sdk.JSBI.add(payload_fee, estimated_tx_fee);
 
                 let in_utxos = utxo_manager.getUTXO(
                     sdk.JSBI.add(send_amount, total_fee),
                     height,
-                    sdk.JSBI.BigInt(sdk.Utils.FEE_FACTOR * sdk.TxInput.getEstimatedNumberOfBytes())
+                    sdk.JSBI.BigInt(sdk.Utils.FEE_RATE * sdk.TxInput.getEstimatedNumberOfBytes())
                 );
 
                 estimated_tx_fee = sdk.JSBI.BigInt(
-                    sdk.Utils.FEE_FACTOR *
+                    sdk.Utils.FEE_RATE *
                         sdk.Transaction.getEstimatedNumberOfBytes(in_utxos.length, output_count, payload.length)
                 );
 
@@ -90,12 +90,12 @@ export class ProposalFeeSender {
                         ...utxo_manager.getUTXO(
                             sdk.JSBI.subtract(total_send_amount, sum_amount_utxo),
                             height,
-                            sdk.JSBI.BigInt(sdk.Utils.FEE_FACTOR * sdk.TxInput.getEstimatedNumberOfBytes())
+                            sdk.JSBI.BigInt(sdk.Utils.FEE_RATE * sdk.TxInput.getEstimatedNumberOfBytes())
                         )
                     );
                     in_utxos.forEach((u: sdk.UnspentTxOutput) => builder.addInput(u.utxo, u.amount));
                     estimated_tx_fee = sdk.JSBI.BigInt(
-                        sdk.Utils.FEE_FACTOR *
+                        sdk.Utils.FEE_RATE *
                             sdk.Transaction.getEstimatedNumberOfBytes(in_utxos.length, output_count, payload.length)
                     );
 
