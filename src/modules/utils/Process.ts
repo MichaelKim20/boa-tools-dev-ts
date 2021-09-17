@@ -3,14 +3,18 @@ import { BOASodium } from "boa-sodium-ts";
 
 export function prepare(): Promise<void> {
     return new Promise<void>((resolve) => {
-        sdk.SodiumHelper.assign(new BOASodium());
-        sdk.SodiumHelper.init()
-            .then(() => {
-                resolve();
-            })
-            .catch((err: any) => {
-                resolve();
-            });
+        if (!sdk.SodiumHelper.isAssigned()) {
+            sdk.SodiumHelper.assign(new BOASodium());
+            sdk.SodiumHelper.init()
+                .then(() => {
+                    resolve();
+                })
+                .catch((err: any) => {
+                    resolve();
+                });
+        } else {
+            resolve();
+        }
     });
 }
 

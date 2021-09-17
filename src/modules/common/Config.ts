@@ -117,7 +117,16 @@ export class ProcessConfig implements IProcessConfig {
 
     public auto_send: boolean;
 
-    constructor(enable?: boolean, only_genesis?: boolean, delay?: number, key_count?: number, auto_send?: boolean) {
+    public auto_send_delay: number;
+
+    constructor(
+        enable?: boolean,
+        only_genesis?: boolean,
+        delay?: number,
+        key_count?: number,
+        auto_send?: boolean,
+        auto_send_delay?: number
+    ) {
         let conf = extend(true, {}, ProcessConfig.defaultValue());
         extend(true, conf, {
             enable: enable,
@@ -125,6 +134,7 @@ export class ProcessConfig implements IProcessConfig {
             delay: delay,
             key_count: key_count,
             auto_send: auto_send,
+            auto_send_delay: auto_send_delay,
         });
 
         this.enable = conf.enable;
@@ -132,6 +142,7 @@ export class ProcessConfig implements IProcessConfig {
         this.delay = conf.delay;
         this.key_count = conf.key_count;
         this.auto_send = conf.auto_send;
+        this.auto_send_delay = conf.auto_send_delay;
     }
 
     /**
@@ -147,6 +158,7 @@ export class ProcessConfig implements IProcessConfig {
         this.delay = conf.delay;
         this.key_count = conf.key_count;
         this.auto_send = conf.auto_send;
+        this.auto_send_delay = conf.auto_send_delay;
     }
 
     /**
@@ -159,6 +171,7 @@ export class ProcessConfig implements IProcessConfig {
             delay: 3000,
             key_count: 1000,
             auto_send: true,
+            auto_send_delay: 5000,
         };
     }
 }
@@ -274,6 +287,8 @@ export interface IProcessConfig {
     key_count: number;
 
     auto_send: boolean;
+
+    auto_send_delay: number;
 }
 
 /**

@@ -13,7 +13,10 @@ export class WK {
     public static Node6Key: KeyPair;
     public static Node7Key: KeyPair;
 
+    public static made: boolean = false;
+
     public static make() {
+        if (WK.made) return;
         WK.GenesisKey = KeyPair.fromSeed(new SecretKey("SDN7BBGE6Z6OQM3K4PACLTZUJ5QX4AY4QPDQ2JJ2JCFWCG2OIYYALIRY"));
         WK.CommonsBudgetKey = KeyPair.fromSeed(
             new SecretKey("SCJXWGALR7KUFYNLFRCU7JCSVZC33Q4OJLEXYJ4YRWBN5XHMO3AQXU6A")
@@ -1414,6 +1417,7 @@ export class WK {
         WK._keys.push(WK.Node7Key);
 
         for (let key of WK._keys) WK._map.set(key.address.toString(), key);
+        WK.made = true;
     }
 
     public static keys(key: number | string): KeyPair {

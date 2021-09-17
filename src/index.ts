@@ -62,17 +62,19 @@ app.listen(port, () => {
     // tslint:disable-next-line:no-console
     console.log(`server started at http://localhost:${port}`);
 });
-const sec = config.process.delay / 1000;
+const sec = config.process.auto_send_delay / 1000;
 const auto_sender = new AutoRandomTxSender();
 const cron = require("node-cron");
 const start_tm = new Date();
 const text = `*/${sec} * * * * *`;
+
 cron.schedule(text, () => {
     if (config.process.auto_send) {
         const diff = new Date().getTime() - start_tm.getTime();
-        if (diff > 300 * 1000) {
+        if (diff > 3000) {
             auto_sender.send().then((result) => {
-                console.log(`AutoSend: Status = ${result.status}; Hash = ${result.data}`);
+                if (result.status) console.log(`AutoSend: Status = ${result.status}; Hash = ${result.data}`);
+                else console.log(`AutoSend: Status = ${result.status}; error = ${result.error}`);
             });
         }
     }
