@@ -32,7 +32,7 @@
   "homepage": "https://github.com/MichaelKim20/boa-tools-dev-ts/",
   "dependencies": {
     "argparse": "^2.0.1",
-    "boa-sdk-ts": "^0.1.9",
+    "boa-sdk-ts": "^0.2.0",
     "boa-sodium-ts": "^0.1.1",
     "body-parser": "^1.19.0",
     "dotenv": "^8.2.0",
