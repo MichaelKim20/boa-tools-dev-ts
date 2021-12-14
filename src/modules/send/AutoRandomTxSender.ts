@@ -29,7 +29,7 @@ export class AutoRandomTxSender {
                 if (res.code !== sdk.WalletResultCode.Success || res.data === undefined) return reject();
 
                 const balance: sdk.Balance = res.data;
-                if (sdk.JSBI.equal(balance.spendable, sdk.BOA(488_000_000).value)) return resolve(false);
+                if (sdk.JSBI.equal(balance.spendable, sdk.BOA(476_000_000).value)) return resolve(false);
                 else return resolve(true);
             });
         });
