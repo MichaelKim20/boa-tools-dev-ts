@@ -120,7 +120,7 @@ export class TxCanceller {
                         let wallet = new sdk.Wallet(WK._keys[0], {
                             agoraEndpoint: this.config.server.agora_endpoint.toString(),
                             stoaEndpoint: this.config.server.stoa_endpoint.toString(),
-                            fee: sdk.WalletFeeOption.Medium,
+                            fee: sdk.WalletTransactionFeeOption.Medium,
                         });
                         res = await wallet.cancelWithHash(this.tx_hash, (addresses: sdk.PublicKey[]) => {
                             return WK._keys.filter(

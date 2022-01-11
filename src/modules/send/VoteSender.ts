@@ -4,6 +4,7 @@ import { logger } from "../common/Logger";
 import { Config } from "../common/Config";
 import { prepare, wait } from "../utils/Process";
 import { WK } from "../utils/WK";
+import {OutputType} from "boa-sdk-ts";
 
 export interface IVoteLinkData {
     payload: string;
@@ -57,7 +58,7 @@ export class VoteSender {
                         sdk.Transaction.getEstimatedNumberOfBytes(in_utxos.length, output_count, payload.length)
                 );
 
-                in_utxos.forEach((u: sdk.UnspentTxOutput) => builder.addInput(u.utxo, u.amount));
+                in_utxos.forEach((u: sdk.UnspentTxOutput) => builder.addInput(OutputType.Payment, u.utxo, u.amount));
                 // Build a transaction
                 let tx = builder.assignPayload(payload).sign(sdk.OutputType.Payment, estimated_tx_fee, payload_fee);
 
@@ -87,7 +88,7 @@ export class VoteSender {
                             sdk.JSBI.BigInt(sdk.Utils.FEE_RATE * sdk.TxInput.getEstimatedNumberOfBytes())
                         )
                     );
-                    in_utxos.forEach((u: sdk.UnspentTxOutput) => builder.addInput(u.utxo, u.amount));
+                    in_utxos.forEach((u: sdk.UnspentTxOutput) => builder.addInput(OutputType.Payment, u.utxo, u.amount));
                     estimated_tx_fee = sdk.JSBI.BigInt(
                         sdk.Utils.FEE_RATE *
                             sdk.Transaction.getEstimatedNumberOfBytes(in_utxos.length, output_count, payload.length)
@@ -106,7 +107,7 @@ export class VoteSender {
                     tx_fee = sdk.JSBI.BigInt(fees.high);
                 }
 
-                in_utxos.forEach((u: sdk.UnspentTxOutput) => builder.addInput(u.utxo, u.amount));
+                in_utxos.forEach((u: sdk.UnspentTxOutput) => builder.addInput(OutputType.Payment, u.utxo, u.amount));
                 tx = builder.assignPayload(payload).sign(sdk.OutputType.Payment, tx_fee, payload_fee);
 
                 resolve(tx);

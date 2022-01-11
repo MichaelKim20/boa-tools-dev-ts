@@ -4,6 +4,7 @@ import { logger, Logger } from "../common/Logger";
 import { Config } from "../common/Config";
 import { prepare, wait } from "../utils/Process";
 import { WK } from "../utils/WK";
+import {OutputType} from "boa-sdk-ts";
 
 export class ManyTxSender {
     private boa_client: sdk.BOAClient;
@@ -59,7 +60,7 @@ export class ManyTxSender {
                             fees = await this.boa_client.getTransactionFee(tx_sz);
                             fee = sdk.JSBI.BigInt(fees.medium);
 
-                            spent_utxos.forEach((u: sdk.UnspentTxOutput) => builder.addInput(u.utxo, u.amount));
+                            spent_utxos.forEach((u: sdk.UnspentTxOutput) => builder.addInput(OutputType.Payment, u.utxo, u.amount));
                             tx = builder
                                 .addOutput(destination_key_pair.address, send_amount)
                                 .sign(sdk.OutputType.Payment, fee);

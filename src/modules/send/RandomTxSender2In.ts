@@ -1,9 +1,10 @@
 import * as sdk from "boa-sdk-ts";
+import {OutputType} from "boa-sdk-ts";
 
-import { logger, Logger } from "../common/Logger";
-import { Config } from "../common/Config";
-import { prepare, wait } from "../utils/Process";
-import { WK } from "../utils/WK";
+import {logger} from "../common/Logger";
+import {Config} from "../common/Config";
+import {prepare} from "../utils/Process";
+import {WK} from "../utils/WK";
 
 export class RandomTxSender2In {
     private boa_client: sdk.BOAClient;
@@ -79,10 +80,10 @@ export class RandomTxSender2In {
                         let fee = sdk.JSBI.BigInt(fees.medium);
 
                         spent_utxos1.forEach((u: sdk.UnspentTxOutput) =>
-                            builder.addInput(u.utxo, u.amount, source_key_pair1.secret)
+                            builder.addInput(OutputType.Payment, u.utxo, u.amount, source_key_pair1.secret)
                         );
                         spent_utxos2.forEach((u: sdk.UnspentTxOutput) =>
-                            builder.addInput(u.utxo, u.amount, source_key_pair2.secret)
+                            builder.addInput(OutputType.Payment, u.utxo, u.amount, source_key_pair2.secret)
                         );
                         let send_amount = sdk.JSBI.subtract(sdk.JSBI.add(send_amount1, send_amount2), fee);
                         console.log(send_amount.toString());

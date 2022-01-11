@@ -160,7 +160,7 @@ export class RandomTxSender {
                 }
 
                 if (sdk.JSBI.greaterThan(height, sdk.JSBI.BigInt(0))) {
-                    let res: sdk.IWalletResult;
+                    let res: sdk.IWalletResult<sdk.Transaction>;
                     try {
                         let key_count = this.config.process.key_count;
                         let sources: Array<number> = [];
@@ -175,9 +175,11 @@ export class RandomTxSender {
                         let destination_key_pair = WK.keys(destination);
 
                         let wallet = new sdk.Wallet(source_key_pair, {
-                            agoraEndpoint: this.config.server.agora_endpoint.toString(),
-                            stoaEndpoint: this.config.server.stoa_endpoint.toString(),
-                            fee: sdk.WalletFeeOption.Medium,
+                            endpoint: {
+                                agora: this.config.server.agora_endpoint.toString(),
+                                stoa: this.config.server.stoa_endpoint.toString(),
+                            },
+                            fee: sdk.WalletTransactionFeeOption.Medium,
                         });
                         let bal_res = await wallet.getBalance();
                         if (bal_res.code !== sdk.WalletResultCode.Success || bal_res.data === undefined) {
@@ -188,7 +190,7 @@ export class RandomTxSender {
                         }
                         let range = sdk.JSBI.BigInt(Math.floor(Math.random() * 50) + 20);
                         let send_amount = sdk.JSBI.divide(
-                            sdk.JSBI.multiply(bal_res.data.spendable, range),
+                            sdk.JSBI.multiply(bal_res.data.spendable.value, range),
                             sdk.JSBI.BigInt(100)
                         );
                         res = await wallet.transfer([

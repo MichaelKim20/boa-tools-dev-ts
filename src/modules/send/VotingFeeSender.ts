@@ -4,6 +4,7 @@ import { logger } from "../common/Logger";
 import { Config } from "../common/Config";
 import { prepare, wait } from "../utils/Process";
 import { WK } from "../utils/WK";
+import {OutputType} from "boa-sdk-ts";
 
 export interface IVotingFeeLinkData {
     proposer_address: string;
@@ -61,7 +62,7 @@ export class VotingFeeSender {
                         sdk.Transaction.getEstimatedNumberOfBytes(in_utxos.length, output_count, payload.length)
                 );
 
-                in_utxos.forEach((u: sdk.UnspentTxOutput) => builder.addInput(u.utxo, u.amount));
+                in_utxos.forEach((u: sdk.UnspentTxOutput) => builder.addInput(OutputType.Payment, u.utxo, u.amount));
 
                 // Build a transaction
                 this.link_data.validators.forEach((m) => builder.addOutput(new sdk.PublicKey(m), voting_fee));
@@ -93,7 +94,7 @@ export class VotingFeeSender {
                             sdk.JSBI.BigInt(sdk.Utils.FEE_RATE * sdk.TxInput.getEstimatedNumberOfBytes())
                         )
                     );
-                    in_utxos.forEach((u: sdk.UnspentTxOutput) => builder.addInput(u.utxo, u.amount));
+                    in_utxos.forEach((u: sdk.UnspentTxOutput) => builder.addInput(OutputType.Payment, u.utxo, u.amount));
                     estimated_tx_fee = sdk.JSBI.BigInt(
                         sdk.Utils.FEE_RATE *
                             sdk.Transaction.getEstimatedNumberOfBytes(in_utxos.length, output_count, payload.length)
@@ -113,7 +114,7 @@ export class VotingFeeSender {
                     tx_fee = sdk.JSBI.BigInt(fees.high);
                 }
 
-                in_utxos.forEach((u: sdk.UnspentTxOutput) => builder.addInput(u.utxo, u.amount));
+                in_utxos.forEach((u: sdk.UnspentTxOutput) => builder.addInput(OutputType.Payment, u.utxo, u.amount));
                 this.link_data.validators.forEach((m) => builder.addOutput(new sdk.PublicKey(m), voting_fee));
                 tx = builder.assignPayload(payload).sign(sdk.OutputType.Payment, tx_fee, payload_fee);
 

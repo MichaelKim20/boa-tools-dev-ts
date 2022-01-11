@@ -37,7 +37,7 @@ export class Unfreezing {
                     let tx_fee = sdk.JSBI.BigInt(fees.medium);
                     let amount: sdk.JSBI = sdk.JSBI.subtract(frozen[0].amount.value, tx_fee);
                     let builder = new sdk.TxBuilder(sender);
-                    builder.addInput(frozen[0].utxo, frozen[0].amount);
+                    builder.addInput(OutputType.Freeze, frozen[0].utxo, frozen[0].amount);
                     builder.addOutput(sender.address, amount);
                     let tx = builder.sign(sdk.OutputType.Payment, tx_fee);
                     console.log(JSON.stringify(tx));

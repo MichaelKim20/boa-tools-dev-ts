@@ -4,7 +4,7 @@ import { logger, Logger } from "../common/Logger";
 import { Config } from "../common/Config";
 import { prepare, wait } from "../utils/Process";
 import { WK } from "../utils/WK";
-import { KeyPair } from "boa-sdk-ts";
+import {KeyPair, OutputType} from "boa-sdk-ts";
 
 export class LargeTxSender {
     private boa_client: sdk.BOAClient;
@@ -56,7 +56,7 @@ export class LargeTxSender {
                     let spent_utxos = utxo_manager.getUTXO(total_amount, height);
 
                     if (spent_utxos.length > 0) {
-                        spent_utxos.forEach((u: sdk.UnspentTxOutput) => builder.addInput(u.utxo, u.amount));
+                        spent_utxos.forEach((u: sdk.UnspentTxOutput) => builder.addInput(OutputType.Payment, u.utxo, u.amount));
                         for (let key_pair of destination_key_pairs) builder.addOutput(key_pair.address, send_amount);
                         tx = builder.sign(sdk.OutputType.Payment);
                         return resolve(tx);

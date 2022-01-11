@@ -1,9 +1,10 @@
 import * as sdk from "boa-sdk-ts";
+import {OutputType} from "boa-sdk-ts";
 
-import { Config } from "../common/Config";
-import { logger, Logger } from "../common/Logger";
-import { prepare, wait } from "../utils/Process";
-import { WK } from "../utils/WK";
+import {Config} from "../common/Config";
+import {logger} from "../common/Logger";
+import {prepare, wait} from "../utils/Process";
+import {WK} from "../utils/WK";
 
 export class Distributor {
     private boa_client: sdk.BOAClient;
@@ -20,15 +21,17 @@ export class Distributor {
     public isDistributed(): Promise<boolean> {
         return new Promise<any>(async (resolve, reject) => {
             const wallet = new sdk.Wallet(WK.Genesis(), {
-                agoraEndpoint: this.config.server.agora_endpoint.toString(),
-                stoaEndpoint: this.config.server.stoa_endpoint.toString(),
-                fee: sdk.WalletFeeOption.Medium,
+                endpoint: {
+                    agora: this.config.server.agora_endpoint.toString(),
+                    stoa: this.config.server.stoa_endpoint.toString(),
+                },
+                fee: sdk.WalletTransactionFeeOption.Medium,
             });
-            wallet.getBalance().then((res: sdk.IWalletResult) => {
+            wallet.getBalance().then((res: sdk.IWalletResult<sdk.WalletBalance>) => {
                 if (res.code !== sdk.WalletResultCode.Success || res.data === undefined) return reject();
 
-                const balance: sdk.Balance = res.data;
-                if (sdk.JSBI.equal(balance.spendable, sdk.BOA(488_000_000).value)) return resolve(false);
+                const balance: sdk.WalletBalance = res.data;
+                if (sdk.JSBI.equal(balance.spendable.value, sdk.BOA(488_000_000).value)) return resolve(false);
                 else return resolve(true);
             });
         });
@@ -62,7 +65,7 @@ export class Distributor {
 
                     const builder = new sdk.TxBuilder(WK.GenesisKey);
 
-                    builder.addInput(utxos[idx].utxo, utxos[idx].amount);
+                    builder.addInput(OutputType.Payment, utxos[idx].utxo, utxos[idx].amount);
                     for (let key_idx = 0; key_idx < tx_out_count; key_idx++) {
                         if (key_idx < tx_out_count - 1)
                             builder.addOutput(WK.keys(idx * tx_out_count + key_idx).address, amount);
@@ -176,7 +179,7 @@ export class Distributor {
                         sdk.JSBI.multiply(amount, sdk.JSBI.BigInt(validators.length))
                     );
                     const builder = new sdk.TxBuilder(WK.GenesisKey);
-                    builder.addInput(utxos[idx].utxo, utxos[idx].amount);
+                    builder.addInput(OutputType.Payment, utxos[idx].utxo, utxos[idx].amount);
                     for (let key_idx = 0; key_idx < validators.length; key_idx++) {
                         if (key_idx < validators.length - 1) builder.addOutput(validators[key_idx], amount);
                         else builder.addOutput(validators[key_idx], sdk.JSBI.add(amount, remain));

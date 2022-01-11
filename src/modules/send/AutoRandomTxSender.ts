@@ -4,6 +4,7 @@ import { Config } from "../common/Config";
 import { logger } from "../common/Logger";
 import { prepare, wait } from "../utils/Process";
 import { WK } from "../utils/WK";
+import {Amount} from "boa-sdk-ts";
 
 export class AutoRandomTxSender {
     private static doing_genesis: boolean = false;
@@ -21,15 +22,17 @@ export class AutoRandomTxSender {
     public isDistributed(): Promise<boolean> {
         return new Promise<any>(async (resolve, reject) => {
             const wallet = new sdk.Wallet(WK.Genesis(), {
-                agoraEndpoint: this.config.server.agora_endpoint.toString(),
-                stoaEndpoint: this.config.server.stoa_endpoint.toString(),
-                fee: sdk.WalletFeeOption.Medium,
+                endpoint: {
+                    agora: this.config.server.agora_endpoint.toString(),
+                    stoa: this.config.server.stoa_endpoint.toString(),
+                },
+                fee: sdk.WalletTransactionFeeOption.Medium,
             });
-            wallet.getBalance().then((res: sdk.IWalletResult) => {
+            wallet.getBalance().then((res: sdk.IWalletResult<sdk.WalletBalance>) => {
                 if (res.code !== sdk.WalletResultCode.Success || res.data === undefined) return reject();
 
-                const balance: sdk.Balance = res.data;
-                if (sdk.JSBI.equal(balance.spendable, sdk.BOA(476_000_000).value)) return resolve(false);
+                const balance: sdk.WalletBalance = res.data;
+                if (sdk.Amount.equal(balance.spendable, sdk.BOA(476_000_000))) return resolve(false);
                 else return resolve(true);
             });
         });
@@ -46,21 +49,23 @@ export class AutoRandomTxSender {
             const destination_key_pair = WK.keys(destination);
 
             const wallet = new sdk.Wallet(source_key_pair, {
-                agoraEndpoint: this.config.server.agora_endpoint.toString(),
-                stoaEndpoint: this.config.server.stoa_endpoint.toString(),
-                fee: sdk.WalletFeeOption.Medium,
+                endpoint: {
+                    agora: this.config.server.agora_endpoint.toString(),
+                    stoa: this.config.server.stoa_endpoint.toString(),
+                },
+                fee: sdk.WalletTransactionFeeOption.Medium,
             });
 
             wallet
                 .getBalance()
-                .then((bal_res: sdk.IWalletResult) => {
+                .then((bal_res: sdk.IWalletResult<sdk.WalletBalance>) => {
                     if (bal_res.code !== sdk.WalletResultCode.Success || bal_res.data === undefined) {
                         return resolve({
                             status: false,
                             error: bal_res.message,
                         });
                     }
-                    if (sdk.JSBI.lessThan(bal_res.data.spendable, sdk.JSBI.BigInt(100))) {
+                    if (sdk.Amount.lessThan(bal_res.data.spendable, Amount.make(100))) {
                         return resolve({
                             status: false,
                             error: "Not enough amount",
@@ -68,7 +73,7 @@ export class AutoRandomTxSender {
                     }
                     const range = sdk.JSBI.BigInt(Math.floor(Math.random() * 40) + 10);
                     const send_amount = sdk.JSBI.divide(
-                        sdk.JSBI.multiply(bal_res.data.spendable, range),
+                        sdk.JSBI.multiply(bal_res.data.spendable.value, range),
                         sdk.JSBI.BigInt(100)
                     );
                     const receivers = [
@@ -137,7 +142,7 @@ export class AutoRandomTxSender {
 
                     const builder = new sdk.TxBuilder(WK.GenesisKey);
 
-                    builder.addInput(utxos[idx].utxo, utxos[idx].amount);
+                    builder.addInput(sdk.OutputType.Payment, utxos[idx].utxo, utxos[idx].amount);
                     for (let key_idx = 0; key_idx < tx_out_count; key_idx++) {
                         if (key_idx < tx_out_count - 1)
                             builder.addOutput(WK.keys(idx * tx_out_count + key_idx).address, amount);
@@ -251,7 +256,7 @@ export class AutoRandomTxSender {
                         sdk.JSBI.multiply(amount, sdk.JSBI.BigInt(validators.length))
                     );
                     const builder = new sdk.TxBuilder(WK.GenesisKey);
-                    builder.addInput(utxos[idx].utxo, utxos[idx].amount);
+                    builder.addInput(sdk.OutputType.Payment, utxos[idx].utxo, utxos[idx].amount);
                     for (let key_idx = 0; key_idx < validators.length; key_idx++) {
                         if (key_idx < validators.length - 1) builder.addOutput(validators[key_idx], amount);
                         else builder.addOutput(validators[key_idx], sdk.JSBI.add(amount, remain));

@@ -1,9 +1,10 @@
 import * as sdk from "boa-sdk-ts";
+import {OutputType} from "boa-sdk-ts";
 
-import { logger } from "../common/Logger";
-import { Config } from "../common/Config";
-import { prepare, wait } from "../utils/Process";
-import { WK } from "../utils/WK";
+import {logger} from "../common/Logger";
+import {Config} from "../common/Config";
+import {prepare} from "../utils/Process";
+import {WK} from "../utils/WK";
 
 export interface IProposalFeeLinkData {
     proposer_address: string;
@@ -60,7 +61,7 @@ export class ProposalFeeSender {
                         sdk.Transaction.getEstimatedNumberOfBytes(in_utxos.length, output_count, payload.length)
                 );
 
-                in_utxos.forEach((u: sdk.UnspentTxOutput) => builder.addInput(u.utxo, u.amount));
+                in_utxos.forEach((u: sdk.UnspentTxOutput) => builder.addInput(OutputType.Payment, u.utxo, u.amount));
                 // Build a transaction
                 let tx = builder
                     .addOutput(new sdk.PublicKey(this.link_data.destination), send_amount)
@@ -93,7 +94,7 @@ export class ProposalFeeSender {
                             sdk.JSBI.BigInt(sdk.Utils.FEE_RATE * sdk.TxInput.getEstimatedNumberOfBytes())
                         )
                     );
-                    in_utxos.forEach((u: sdk.UnspentTxOutput) => builder.addInput(u.utxo, u.amount));
+                    in_utxos.forEach((u: sdk.UnspentTxOutput) => builder.addInput(OutputType.Payment, u.utxo, u.amount));
                     estimated_tx_fee = sdk.JSBI.BigInt(
                         sdk.Utils.FEE_RATE *
                             sdk.Transaction.getEstimatedNumberOfBytes(in_utxos.length, output_count, payload.length)
@@ -115,7 +116,7 @@ export class ProposalFeeSender {
                     tx_fee = sdk.JSBI.BigInt(fees.high);
                 }
 
-                in_utxos.forEach((u: sdk.UnspentTxOutput) => builder.addInput(u.utxo, u.amount));
+                in_utxos.forEach((u: sdk.UnspentTxOutput) => builder.addInput(OutputType.Payment, u.utxo, u.amount));
                 tx = builder
                     .addOutput(new sdk.PublicKey(this.link_data.destination), send_amount)
                     .assignPayload(payload)

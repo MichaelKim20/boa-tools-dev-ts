@@ -12,7 +12,7 @@ sdk.SodiumHelper.init().then(async () => {
     const wallet = new sdk.Wallet(keypair, {
         agoraEndpoint: "http://localhost:2826",
         stoaEndpoint: "http://localhost:3836",
-        fee: sdk.WalletFeeOption.Medium,
+        fee: sdk.WalletTransactionFeeOption.Medium,
     });
 
     // 동결된 자금이 전송되는 주

@@ -8,7 +8,7 @@ sdk.SodiumHelper.init().then(async () => {
     const wallet = new sdk.Wallet(keypair, {
         agoraEndpoint: "http://localhost:2826",
         stoaEndpoint: "http://localhost:3836",
-        fee: sdk.WalletFeeOption.Medium,
+        fee: sdk.WalletTransactionFeeOption.Medium,
     });
 
     const res = await wallet.getBalance();
